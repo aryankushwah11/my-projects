@@ -17,7 +17,7 @@ public class exp5 {
 
     public static void main(String[] args) {
         try {
-            int amount = -500;
+            int amount = -200;
             checkAmount(amount);
         } catch (NegativeAmountException e) {
             System.out.println("Exception caught: " + e.getMessage());
