@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campus JARVIS</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080910;
+  --bg2: #0e0f1a;
+  --bg3: #13141f;
+  --bg4: #1a1b28;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --purple: #7c6fee;
+  --purple2: #5a50c8;
+  --purple-glow: rgba(124,111,238,0.15);
+  --teal: #1db87a;
+  --teal-glow: rgba(29,184,122,0.12);
+  --coral: #f0614a;
+  --amber: #f5a623;
+  --blue: #4a9eff;
+  --text: #e8e9f0;
+  --text2: #8b8da0;
+  --text3: #5a5b6e;
+  --r: 12px;
+  --r2: 16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{width:220px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:20px 0;z-index:10}
+.logo{padding:0 20px 24px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.logo-orb{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--purple),var(--teal));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:13px;color:#fff;flex-shrink:0}
+.logo-text{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:var(--text)}
+.logo-sub{font-size:10px;color:var(--text3);margin-top:1px}
+.nav{flex:1;padding:16px 12px;display:flex;flex-direction:column;gap:2px}
+.nav-section{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;padding:10px 8px 6px;margin-top:8px}
+.nav-section:first-child{margin-top:0}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;cursor:pointer;transition:all .15s;font-size:13px;color:var(--text2);font-weight:500;border:1px solid transparent}
+.nav-item:hover{background:var(--bg4);color:var(--text)}
+.nav-item.active{background:var(--purple-glow);color:var(--purple);border-color:rgba(124,111,238,0.2)}
+.nav-icon{width:16px;height:16px;flex-shrink:0;opacity:.8}
+.nav-item.active .nav-icon{opacity:1}
+.nav-badge{margin-left:auto;font-size:10px;background:var(--coral);color:#fff;padding:1px 6px;border-radius:20px;font-weight:600}
+.sidebar-bottom{padding:16px 12px;border-top:1px solid var(--border)}
+.student-card{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:var(--bg3);cursor:pointer;transition:background .15s}
+.student-card:hover{background:var(--bg4)}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--blue));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:11px;color:#fff;flex-shrink:0}
+.student-info{flex:1;min-width:0}
+.student-name{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.student-college{font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.topbar{height:56px;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:16px;flex-shrink:0;background:var(--bg)}
+.topbar-title{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--text);flex:1}
+.topbar-status{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--teal);background:var(--teal-glow);padding:5px 12px;border-radius:20px;border:1px solid rgba(29,184,122,0.2)}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);animation:statusPulse 2s infinite}
+@keyframes statusPulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(29,184,122,.4)}50%{opacity:.7;box-shadow:0 0 0 4px rgba(29,184,122,0)}}
+.topbar-btn{width:34px;height:34px;border-radius:9px;border:1px solid var(--border2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;color:var(--text2)}
+.topbar-btn:hover{background:var(--bg3);color:var(--text)}
+.content{flex:1;overflow-y:auto;padding:28px;scroll-behavior:smooth}
+.content::-webkit-scrollbar{width:4px}
+.content::-webkit-scrollbar-track{background:transparent}
+.content::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
+
+/* PAGES */
+.page{display:none;animation:fadeUp .25s ease}
+.page.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:20px}
+.card-sm{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px}
+
+/* DASHBOARD */
+.greeting{margin-bottom:28px}
+.greeting-time{font-size:12px;color:var(--text3);margin-bottom:6px;font-weight:500}
+.greeting-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--text);line-height:1.2;margin-bottom:8px}
+.greeting-title span{background:linear-gradient(135deg,var(--purple),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.greeting-sub{font-size:14px;color:var(--text2);line-height:1.6}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:18px;position:relative;overflow:hidden;transition:border-color .2s,transform .2s;cursor:default}
+.stat-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:var(--r2) var(--r2) 0 0}
+.stat-card.purple::before{background:linear-gradient(90deg,var(--purple),transparent)}
+.stat-card.teal::before{background:linear-gradient(90deg,var(--teal),transparent)}
+.stat-card.coral::before{background:linear-gradient(90deg,var(--coral),transparent)}
+.stat-card.amber::before{background:linear-gradient(90deg,var(--amber),transparent)}
+.stat-label{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.05em;text-transform:uppercase;margin-bottom:10px}
+.stat-value{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--text);line-height:1}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:6px}
+.stat-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:28px;opacity:.15}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+.section-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.section-link{font-size:12px;color:var(--purple);font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer}
+.section-link:hover{text-decoration:underline}
+
+/* JARVIS AI MESSAGE */
+.jarvis-banner{background:linear-gradient(135deg,rgba(124,111,238,.12),rgba(29,184,122,.08));border:1px solid rgba(124,111,238,.25);border-radius:var(--r2);padding:18px 20px;margin-bottom:24px;display:flex;gap:14px;align-items:flex-start}
+.jarvis-orb-sm{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--teal));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.jarvis-msg{flex:1}
+.jarvis-msg-label{font-size:10px;font-weight:700;color:var(--purple);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.jarvis-msg-text{font-size:13px;color:var(--text);line-height:1.7}
+
+/* TASK LIST */
+.task-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border)}
+.task-item:last-child{border-bottom:none}
+.task-check{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border2);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.task-check:hover{border-color:var(--purple)}
+.task-check.done{background:var(--teal);border-color:var(--teal)}
+.task-text{font-size:13px;color:var(--text);flex:1}
+.task-text.done{color:var(--text3);text-decoration:line-through}
+.task-tag{font-size:10px;padding:3px 8px;border-radius:20px;font-weight:600}
+.tag-purple{background:rgba(124,111,238,.15);color:var(--purple)}
+.tag-teal{background:rgba(29,184,122,.15);color:var(--teal)}
+.tag-coral{background:rgba(240,97,74,.15);color:var(--coral)}
+.tag-amber{background:rgba(245,166,35,.15);color:var(--amber)}
+
+/* PROGRESS BARS */
+.progress-item{margin-bottom:14px}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.progress-label{font-size:12px;color:var(--text);font-weight:500}
+.progress-pct{font-size:12px;color:var(--text2)}
+.progress-bar{height:6px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;transition:width .8s ease}
+.fill-purple{background:linear-gradient(90deg,var(--purple2),var(--purple))}
+.fill-teal{background:linear-gradient(90deg,#0f8f5a,var(--teal))}
+.fill-amber{background:linear-gradient(90deg,#c07d0a,var(--amber))}
+.fill-coral{background:linear-gradient(90deg,#c03820,var(--coral))}
+.fill-blue{background:linear-gradient(90deg,#1a6fd4,var(--blue))}
+
+/* SLEEP RING */
+.sleep-display{display:flex;align-items:center;gap:24px;padding:8px 0}
+.sleep-ring{position:relative;width:100px;height:100px;flex-shrink:0}
+.sleep-ring svg{transform:rotate(-90deg)}
+.sleep-ring-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.sleep-ring-hrs{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--text)}
+.sleep-ring-sub{font-size:9px;color:var(--text3);font-weight:500}
+.sleep-info{flex:1}
+.sleep-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px}
+.sleep-row:last-child{border-bottom:none}
+.sleep-key{color:var(--text3)}
+.sleep-val{color:var(--text);font-weight:500}
+
+/* PAYMENT ITEMS */
+.payment-item{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--border)}
+.payment-item:last-child{border-bottom:none}
+.pay-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.pay-info{flex:1}
+.pay-name{font-size:13px;font-weight:500;color:var(--text)}
+.pay-date{font-size:11px;color:var(--text3);margin-top:2px}
+.pay-amount{font-family:'Syne',sans-serif;font-size:14px;font-weight:700}
+.pay-paid{color:var(--teal)}
+.pay-due{color:var(--coral)}
+.pay-status{font-size:10px;padding:3px 8px;border-radius:20px;margin-top:4px;font-weight:600;text-align:center}
+.status-paid{background:rgba(29,184,122,.12);color:var(--teal)}
+.status-due{background:rgba(240,97,74,.12);color:var(--coral)}
+.status-upcoming{background:rgba(74,158,255,.12);color:var(--blue)}
+
+/* EXAM CARDS */
+.exam-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .15s}
+.exam-card:hover{border-color:var(--border2);background:var(--bg4)}
+.exam-countdown{width:52px;height:52px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.cd-days{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;line-height:1}
+.cd-label{font-size:9px;font-weight:600;letter-spacing:.05em;margin-top:2px}
+.exam-info{flex:1}
+.exam-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.exam-date{font-size:11px;color:var(--text3)}
+.exam-progress-bar{height:4px;background:var(--bg);border-radius:2px;overflow:hidden;margin-top:8px}
+.exam-progress-fill{height:100%;border-radius:2px}
+
+/* SKILLS */
+.skill-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;cursor:pointer;transition:all .2s}
+.skill-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.skill-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.skill-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.skill-name{font-size:13px;font-weight:600;color:var(--text)}
+.skill-level{font-size:10px;color:var(--text3)}
+
+/* CHAT */
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 56px - 56px);max-height:700px}
+.chat-messages{flex:1;overflow-y:auto;padding:0 0 16px;display:flex;flex-direction:column;gap:12px}
+.chat-messages::-webkit-scrollbar{width:3px}
+.chat-messages::-webkit-scrollbar-thumb{background:var(--bg4)}
+.msg-row{display:flex;gap:10px;align-items:flex-start;animation:fadeUp .2s ease}
+.msg-row.user{flex-direction:row-reverse}
+.msg-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.av-j{background:linear-gradient(135deg,var(--purple),var(--teal));color:#fff;font-family:'Syne',sans-serif}
+.av-u{background:var(--bg4);color:var(--text2);border:1px solid var(--border2)}
+.msg-bubble{max-width:75%;padding:11px 15px;border-radius:14px;font-size:13px;line-height:1.7;color:var(--text)}
+.bubble-j{background:var(--bg3);border:1px solid var(--border);border-radius:4px 14px 14px 14px}
+.bubble-u{background:linear-gradient(135deg,var(--purple2),var(--purple));border-radius:14px 4px 14px 14px;color:#fff}
+.typing-bubble{background:var(--bg3);border:1px solid var(--border);border-radius:4px 14px 14px 14px;padding:14px 18px;display:flex;gap:5px;align-items:center}
+.typing-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);animation:typingBounce .9s infinite}
+.typing-dot:nth-child(2){animation-delay:.15s}
+.typing-dot:nth-child(3){animation-delay:.3s}
+@keyframes typingBounce{0%,80%,100%{transform:translateY(0);opacity:.5}40%{transform:translateY(-5px);opacity:1}}
+.quick-chips{display:flex;gap:7px;flex-wrap:wrap;padding:12px 0}
+.qchip{font-size:11px;padding:6px 12px;border-radius:20px;border:1px solid var(--border2);color:var(--text2);cursor:pointer;background:transparent;transition:all .15s;white-space:nowrap;font-family:'DM Sans',sans-serif}
+.qchip:hover{background:var(--bg3);color:var(--text);border-color:var(--purple)}
+.chat-input-row{display:flex;gap:10px;align-items:flex-end;padding-top:12px;border-top:1px solid var(--border)}
+.chat-input-wrap{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:14px;padding:10px 14px;display:flex;gap:10px;align-items:flex-end;transition:border-color .15s}
+.chat-input-wrap:focus-within{border-color:rgba(124,111,238,.5)}
+#chat-input{flex:1;background:transparent;border:none;outline:none;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;resize:none;max-height:100px;min-height:22px;line-height:1.5}
+#chat-input::placeholder{color:var(--text3)}
+.send-btn{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--purple2),var(--purple));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s}
+.send-btn:hover{opacity:.85}
+.send-btn:disabled{opacity:.35;cursor:not-allowed}
+
+/* HOSTEL */
+.room-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:20px}
+.room-cell{aspect-ratio:1;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;font-weight:600;cursor:pointer;transition:all .15s;border:1px solid transparent}
+.room-occupied{background:var(--bg4);color:var(--text3);border-color:var(--border)}
+.room-you{background:linear-gradient(135deg,var(--purple2),var(--purple));color:#fff}
+.room-vacant{background:rgba(29,184,122,.1);color:var(--teal);border-color:rgba(29,184,122,.2)}
+.room-cell:hover{transform:scale(1.08)}
+
+/* NOTIFICATION DOT */
+.notif-dot{width:8px;height:8px;border-radius:50%;background:var(--coral);border:2px solid var(--bg2)}
+
+/* RESPONSIVE HELPERS */
+.flex{display:flex}
+.flex-col{display:flex;flex-direction:column}
+.items-center{align-items:center}
+.gap-2{gap:8px}
+.gap-3{gap:12px}
+.mt-4{margin-top:16px}
+.mb-4{margin-bottom:16px}
+.text-muted{color:var(--text2);font-size:12px}
+.fw-600{font-weight:600}
+.divider{height:1px;background:var(--border);margin:14px 0}
+.btn{padding:9px 18px;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;border:none}
+.btn-primary{background:linear-gradient(135deg,var(--purple2),var(--purple));color:#fff}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px)}
+.btn-secondary{background:var(--bg4);color:var(--text);border:1px solid var(--border2)}
+.btn-secondary:hover{background:var(--bg3);border-color:var(--border2)}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-orb">J</div>
+    <div>
+      <div class="logo-text">Campus JARVIS</div>
+      <div class="logo-sub">Student AI Platform</div>
+    </div>
+  </div>
+  <nav class="nav">
+    <div class="nav-section">Main</div>
+    <div class="nav-item active" onclick="goPage('dashboard',this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg>
+      Dashboard
+    </div>
+    <div class="nav-item" onclick="goPage('chat',this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 10a2 2 0 01-2 2H5l-3 3V4a2 2 0 012-2h8a2 2 0 012 2v6z"/></svg>
+      Ask JARVIS
+      <span class="nav-badge">AI</span>
+    </div>
+    <div class="nav-section">Life</div>
+    <div class="nav-item" onclick="goPage('sleep',this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13.5 10A6 6 0 116 2.5a4.5 4.5 0 007.5 7.5z"/></svg>
+      Sleep AI
+    </div>
+    <div class="nav-item" onclick="goPage('payments',this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="14" height="9" rx="1.5"/><path d="M1 7h14"/><path d="M4 10.5h2"/></svg>
+      Payments
+      <span class="nav-badge">2</span>
+    </div>
+    <div class="nav-item" onclick="goPage('hostel',this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 15V7l6-5 6 5v8"/><path d="M6 15v-4h4v4"/></svg>
+      Hostel
+    </div>
+    <div class="nav-section">Academics</div>
+    <div class="nav-item" onclick="goPage('exams',this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 1h8l2 3v10a1 1 0 01-1 1H3a1 1 0 01-1-1V4z"/><path d="M9 1v3h4"/><path d="M5 8h6M5 11h4"/></svg>
+      Exam Prep
+    </div>
+    <div class="nav-item" onclick="goPage('skills',this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="7"/><path d="M8 4v4l3 2"/></svg>
+      Skills
+    </div>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="student-card">
+      <div class="avatar">AK</div>
+      <div class="student-info">
+        <div class="student-name">Aryan Kumar</div>
+        <div class="student-college">IIT Delhi · CS 3rd yr</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="page-title">Good morning, Aryan 👋</div>
+    <div class="topbar-status">
+      <div class="status-dot"></div>
+      JARVIS Online
+    </div>
+    <button class="topbar-btn" title="Notifications">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1a5 5 0 015 5v3l1.5 2H1.5L3 9V6a5 5 0 015-5z"/><path d="M6.5 13.5a1.5 1.5 0 003 0"/></svg>
+    </button>
+    <button class="topbar-btn" title="Settings">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.42 1.42M11.53 11.53l1.42 1.42M3.05 12.95l1.42-1.42M11.53 4.47l1.42-1.42"/></svg>
+    </button>
+  </div>
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="pg-dashboard">
+      <div class="greeting">
+        <div class="greeting-time" id="greeting-time">Monday, April 17 · 9:24 AM</div>
+        <div class="greeting-title">Good morning, <span>Aryan.</span></div>
+        <div class="greeting-sub">You have 3 tasks pending · Algorithms exam in 12 days · Sleep score: 82%</div>
+      </div>
+
+      <div class="jarvis-banner">
+        <div class="jarvis-orb-sm">🤖</div>
+        <div class="jarvis-msg">
+          <div class="jarvis-msg-label">JARVIS says</div>
+          <div class="jarvis-msg-text">You slept 7.5 hours last night — solid. Your next deadline is the OS assignment due Friday. You have 2 free hours before your 11 AM lecture — perfect for Data Structures practice. Want me to generate 10 MCQs on Trees?</div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card purple">
+          <div class="stat-label">Sleep last night</div>
+          <div class="stat-value">7.5h</div>
+          <div class="stat-sub">Target: 8h · Score 82%</div>
+          <div class="stat-icon">🌙</div>
+        </div>
+        <div class="stat-card teal">
+          <div class="stat-label">Streak</div>
+          <div class="stat-value">14d</div>
+          <div class="stat-sub">Longest: 21 days</div>
+          <div class="stat-icon">🔥</div>
+        </div>
+        <div class="stat-card coral">
+          <div class="stat-label">Fees due</div>
+          <div class="stat-value">₹12k</div>
+          <div class="stat-sub">Due in 8 days</div>
+          <div class="stat-icon">💳</div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-label">Exams ahead</div>
+          <div class="stat-value">3</div>
+          <div class="stat-sub">Next: OS · 12 days</div>
+          <div class="stat-icon">📚</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="section-title">Today's tasks <span class="section-link" onclick="goPage('exams',document.querySelector('.nav-item:nth-child(8)'))">+ Add</span></div>
+          <div class="task-item">
+            <div class="task-check" onclick="toggleTask(this)"></div>
+            <div class="task-text">Complete OS Assignment — Chapter 5</div>
+            <span class="task-tag tag-coral">Due Fri</span>
+          </div>
+          <div class="task-item">
+            <div class="task-check done" onclick="toggleTask(this)">✓</div>
+            <div class="task-text done">Morning run — 30 minutes</div>
+            <span class="task-tag tag-teal">Done</span>
+          </div>
+          <div class="task-item">
+            <div class="task-check" onclick="toggleTask(this)"></div>
+            <div class="task-text">Study DSA — Binary Trees (2 hrs)</div>
+            <span class="task-tag tag-purple">High</span>
+          </div>
+          <div class="task-item">
+            <div class="task-check" onclick="toggleTask(this)"></div>
+            <div class="task-text">Pay hostel fee before deadline</div>
+            <span class="task-tag tag-coral">Urgent</span>
+          </div>
+          <div class="task-item">
+            <div class="task-check" onclick="toggleTask(this)"></div>
+            <div class="task-text">Log meals in diet tracker</div>
+            <span class="task-tag tag-amber">Daily</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Exam readiness</div>
+          <div class="progress-item">
+            <div class="progress-top"><div class="progress-label">Operating Systems</div><div class="progress-pct">68%</div></div>
+            <div class="progress-bar"><div class="progress-fill fill-coral" style="width:68%"></div></div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-top"><div class="progress-label">Data Structures</div><div class="progress-pct">82%</div></div>
+            <div class="progress-bar"><div class="progress-fill fill-purple" style="width:82%"></div></div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-top"><div class="progress-label">Algorithms</div><div class="progress-pct">54%</div></div>
+            <div class="progress-bar"><div class="progress-fill fill-amber" style="width:54%"></div></div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-top"><div class="progress-label">Computer Networks</div><div class="progress-pct">91%</div></div>
+            <div class="progress-bar"><div class="progress-fill fill-teal" style="width:91%"></div></div>
+          </div>
+          <div class="divider"></div>
+          <div class="section-title" style="margin-bottom:10px">This week's habits</div>
+          <div class="progress-item">
+            <div class="progress-top"><div class="progress-label">Study sessions</div><div class="progress-pct">5/7</div></div>
+            <div class="progress-bar"><div class="progress-fill fill-blue" style="width:71%"></div></div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-top"><div class="progress-label">Sleep on time</div><div class="progress-pct">6/7</div></div>
+            <div class="progress-bar"><div class="progress-fill fill-purple" style="width:86%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="card-sm">
+          <div class="section-title" style="font-size:12px">Sleep this week</div>
+          <div class="sleep-display">
+            <div class="sleep-ring">
+              <svg width="100" height="100" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="10"/>
+                <circle cx="50" cy="50" r="42" fill="none" stroke="url(#sg)" stroke-width="10" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="52"/>
+                <defs><linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#5a50c8"/><stop offset="100%" stop-color="#1db87a"/></linearGradient></defs>
+              </svg>
+              <div class="sleep-ring-label"><div class="sleep-ring-hrs">7.5</div><div class="sleep-ring-sub">HRS AVG</div></div>
+            </div>
+          </div>
+          <div class="flex gap-2 mt-4">
+            <button class="btn btn-secondary" style="flex:1;font-size:11px" onclick="goPage('sleep',document.querySelectorAll('.nav-item')[3])">View sleep AI</button>
+          </div>
+        </div>
+
+        <div class="card-sm">
+          <div class="section-title" style="font-size:12px">Payments</div>
+          <div class="payment-item" style="padding:8px 0">
+            <div class="pay-icon" style="background:rgba(240,97,74,.1)">💳</div>
+            <div class="pay-info">
+              <div class="pay-name">Hostel Fee</div>
+              <div class="pay-date">Due Apr 25</div>
+            </div>
+            <div><div class="pay-amount pay-due">₹8,500</div><div class="pay-status status-due">Due</div></div>
+          </div>
+          <div class="payment-item" style="padding:8px 0">
+            <div class="pay-icon" style="background:rgba(240,97,74,.1)">📚</div>
+            <div class="pay-info">
+              <div class="pay-name">Semester Fee</div>
+              <div class="pay-date">Due Apr 30</div>
+            </div>
+            <div><div class="pay-amount pay-due">₹3,500</div><div class="pay-status status-due">Due</div></div>
+          </div>
+          <button class="btn btn-primary" style="width:100%;margin-top:10px;font-size:11px" onclick="goPage('payments',document.querySelectorAll('.nav-item')[4])">Pay now</button>
+        </div>
+
+        <div class="card-sm">
+          <div class="section-title" style="font-size:12px">Quick actions</div>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <button class="btn btn-secondary" style="width:100%;text-align:left;font-size:12px" onclick="goPage('chat',document.querySelectorAll('.nav-item')[1])">🤖 Ask JARVIS anything</button>
+            <button class="btn btn-secondary" style="width:100%;text-align:left;font-size:12px" onclick="goPage('exams',document.querySelectorAll('.nav-item')[7])">📝 Generate mock test</button>
+            <button class="btn btn-secondary" style="width:100%;text-align:left;font-size:12px" onclick="goPage('sleep',document.querySelectorAll('.nav-item')[3])">🌙 Set smart alarm</button>
+            <button class="btn btn-secondary" style="width:100%;text-align:left;font-size:12px" onclick="goPage('skills',document.querySelectorAll('.nav-item')[8])">💡 View skills roadmap</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JARVIS CHAT -->
+    <div class="page" id="pg-chat">
+      <div class="chat-wrap">
+        <div class="chat-messages" id="chat-msgs">
+          <div class="msg-row">
+            <div class="msg-avatar av-j">J</div>
+            <div class="msg-bubble bubble-j">
+              Hey Aryan! 👋 I'm JARVIS, your personal AI.<br><br>
+              I know your schedule, exams, sleep, payments and habits. Ask me anything — study plans, career advice, what to do right now, or just talk. I'm here 24/7.
+            </div>
+          </div>
+        </div>
+        <div class="quick-chips">
+          <div class="qchip" onclick="quickMsg('Make me a 10-day study plan for my OS exam')">📚 OS study plan</div>
+          <div class="qchip" onclick="quickMsg('What should I do right now to be productive?')">⚡ What to do now</div>
+          <div class="qchip" onclick="quickMsg('Give me 5 MCQs on Binary Trees for my DSA exam')">🧪 DSA mock test</div>
+          <div class="qchip" onclick="quickMsg('I am feeling stressed about exams. Help me.')">😟 Feeling stressed</div>
+          <div class="qchip" onclick="quickMsg('What tech skills should I learn for a software job?')">💡 Career skills</div>
+          <div class="qchip" onclick="quickMsg('How do I build good study habits as a hostel student?')">🏠 Hostel tips</div>
+        </div>
+        <div class="chat-input-row">
+          <div class="chat-input-wrap">
+            <textarea id="chat-input" placeholder="Ask JARVIS anything..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+          </div>
+          <button class="send-btn" id="send-btn" onclick="sendChat()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLEEP AI -->
+    <div class="page" id="pg-sleep">
+      <div class="greeting-title" style="font-size:20px;margin-bottom:20px">Sleep AI <span style="font-size:14px;color:var(--text2);font-family:'DM Sans',sans-serif;font-weight:400">— smart sleep cycle tracker</span></div>
+      <div class="grid-2" style="margin-bottom:16px">
+        <div class="card">
+          <div class="section-title">Smart alarm calculator</div>
+          <div style="margin-bottom:14px">
+            <div style="font-size:12px;color:var(--text3);margin-bottom:6px">I want to wake up at</div>
+            <input type="time" id="wake-time" value="07:00" style="background:var(--bg3);border:1px solid var(--border2);border-radius:9px;padding:10px 14px;color:var(--text);font-size:16px;font-family:'Syne',sans-serif;font-weight:700;width:100%;outline:none" onchange="calcBedtime()">
+          </div>
+          <div style="background:var(--bg3);border-radius:var(--r);padding:14px;border:1px solid var(--border)" id="bedtime-results">
+            <div style="font-size:11px;color:var(--text3);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em">JARVIS recommends sleeping at</div>
+            <div id="bedtime-options"></div>
+            <div style="font-size:11px;color:var(--text3);margin-top:10px;line-height:1.6">Each cycle = 90 minutes. You'll wake up between sleep cycles feeling refreshed — not groggy.</div>
+          </div>
+          <button class="btn btn-primary" style="width:100%;margin-top:12px" onclick="setAlarm()">Set smart alarm 🔔</button>
+        </div>
+        <div class="card">
+          <div class="section-title">This week's sleep</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div id="sleep-week"></div>
+          </div>
+          <div class="divider"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div style="background:var(--bg3);border-radius:var(--r);padding:12px;text-align:center"><div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--purple)">7.5h</div><div style="font-size:11px;color:var(--text3);margin-top:3px">Avg this week</div></div>
+            <div style="background:var(--bg3);border-radius:var(--r);padding:12px;text-align:center"><div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--teal)">82%</div><div style="font-size:11px;color:var(--text3);margin-top:3px">Sleep score</div></div>
+            <div style="background:var(--bg3);border-radius:var(--r);padding:12px;text-align:center"><div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--amber)">5</div><div style="font-size:11px;color:var(--text3);margin-top:3px">Days on target</div></div>
+            <div style="background:var(--bg3);border-radius:var(--r);padding:12px;text-align:center"><div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--coral)">-0.5h</div><div style="font-size:11px;color:var(--text3);margin-top:3px">Sleep debt</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-title">JARVIS sleep insight</div>
+        <div class="jarvis-banner" style="margin-bottom:0">
+          <div class="jarvis-orb-sm">🌙</div>
+          <div class="jarvis-msg">
+            <div class="jarvis-msg-label">JARVIS sleep AI</div>
+            <div class="jarvis-msg-text">Your sleep this week is good — 7.5 hour average. However, Wednesday you only got 5.5 hours before your Thursday lab. I've noticed your best study performance happens after nights with 7–8 hours. Tonight before your exam prep: sleep by 11 PM for a full 8 hours. I'll set your alarm for 7 AM (5 complete cycles).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAYMENTS -->
+    <div class="page" id="pg-payments">
+      <div class="greeting-title" style="font-size:20px;margin-bottom:20px">Payments <span style="font-size:14px;color:var(--text2);font-family:'DM Sans',sans-serif;font-weight:400">— all fees tracked</span></div>
+      <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="stat-card coral"><div class="stat-label">Amount due</div><div class="stat-value">₹12,000</div><div class="stat-sub">2 payments pending</div></div>
+        <div class="stat-card teal"><div class="stat-label">Paid this semester</div><div class="stat-value">₹54,000</div><div class="stat-sub">4 payments cleared</div></div>
+        <div class="stat-card amber"><div class="stat-label">Next due date</div><div class="stat-value">Apr 25</div><div class="stat-sub">8 days remaining</div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="section-title">Pending payments</div>
+          <div class="payment-item">
+            <div class="pay-icon" style="background:rgba(240,97,74,.12);font-size:20px">🏠</div>
+            <div class="pay-info"><div class="pay-name">Hostel Semester Fee</div><div class="pay-date">Due April 25, 2025</div></div>
+            <div style="text-align:right"><div class="pay-amount pay-due">₹8,500</div><div class="pay-status status-due">Due</div></div>
+          </div>
+          <div class="payment-item">
+            <div class="pay-icon" style="background:rgba(240,97,74,.12);font-size:20px">📘</div>
+            <div class="pay-info"><div class="pay-name">Semester Tuition Fee</div><div class="pay-date">Due April 30, 2025</div></div>
+            <div style="text-align:right"><div class="pay-amount pay-due">₹3,500</div><div class="pay-status status-due">Due</div></div>
+          </div>
+          <button class="btn btn-primary" style="width:100%;margin-top:12px">Pay ₹12,000 via Razorpay 🔒</button>
+        </div>
+        <div class="card">
+          <div class="section-title">Payment history</div>
+          <div class="payment-item">
+            <div class="pay-icon" style="background:rgba(29,184,122,.1);font-size:20px">🍽️</div>
+            <div class="pay-info"><div class="pay-name">Mess Fee — March</div><div class="pay-date">Paid Mar 28, 2025</div></div>
+            <div style="text-align:right"><div class="pay-amount pay-paid">₹3,200</div><div class="pay-status status-paid">Paid</div></div>
+          </div>
+          <div class="payment-item">
+            <div class="pay-icon" style="background:rgba(29,184,122,.1);font-size:20px">📘</div>
+            <div class="pay-info"><div class="pay-name">Semester Fee — Sem 5</div><div class="pay-date">Paid Jan 10, 2025</div></div>
+            <div style="text-align:right"><div class="pay-amount pay-paid">₹42,000</div><div class="pay-status status-paid">Paid</div></div>
+          </div>
+          <div class="payment-item">
+            <div class="pay-icon" style="background:rgba(29,184,122,.1);font-size:20px">🏠</div>
+            <div class="pay-info"><div class="pay-name">Hostel — Sem 5</div><div class="pay-date">Paid Jan 5, 2025</div></div>
+            <div style="text-align:right"><div class="pay-amount pay-paid">₹8,800</div><div class="pay-status status-paid">Paid</div></div>
+          </div>
+          <button class="btn btn-secondary" style="width:100%;margin-top:12px">Download all receipts PDF</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOSTEL -->
+    <div class="page" id="pg-hostel">
+      <div class="greeting-title" style="font-size:20px;margin-bottom:20px">Hostel <span style="font-size:14px;color:var(--text2);font-family:'DM Sans',sans-serif;font-weight:400">— Kaveri Block · Room 4B-12</span></div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="section-title">Room availability — 4th Floor B</div>
+          <div class="room-grid" id="room-grid"></div>
+          <div style="display:flex;gap:12px;font-size:11px;color:var(--text3)">
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:linear-gradient(135deg,#5a50c8,#7c6fee);display:inline-block"></span>Your room</span>
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:var(--bg4);display:inline-block"></span>Occupied</span>
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:rgba(29,184,122,.2);display:inline-block"></span>Vacant</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-title">Your room details</div>
+          <div class="sleep-row"><span class="sleep-key">Room</span><span class="sleep-val" style="color:var(--purple);font-weight:700">4B-12</span></div>
+          <div class="sleep-row"><span class="sleep-key">Block</span><span class="sleep-val">Kaveri Block</span></div>
+          <div class="sleep-row"><span class="sleep-key">Floor</span><span class="sleep-val">4th Floor</span></div>
+          <div class="sleep-row"><span class="sleep-key">Roommate</span><span class="sleep-val">Rohit Sharma · ECE</span></div>
+          <div class="sleep-row"><span class="sleep-key">Warden</span><span class="sleep-val">Dr. S. Mehta</span></div>
+          <div class="sleep-row"><span class="sleep-key">Mess</span><span class="sleep-val">Kaveri Mess · 200m</span></div>
+          <div class="divider"></div>
+          <button class="btn btn-secondary" style="width:100%;margin-bottom:8px">Submit maintenance request</button>
+          <button class="btn btn-secondary" style="width:100%">Apply for room change</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXAMS -->
+    <div class="page" id="pg-exams">
+      <div class="greeting-title" style="font-size:20px;margin-bottom:20px">Exam Prep AI <span style="font-size:14px;color:var(--text2);font-family:'DM Sans',sans-serif;font-weight:400">— your personal study coach</span></div>
+      <div class="jarvis-banner" style="margin-bottom:20px">
+        <div class="jarvis-orb-sm">📚</div>
+        <div class="jarvis-msg">
+          <div class="jarvis-msg-label">JARVIS exam AI</div>
+          <div class="jarvis-msg-text">You have 3 exams in the next 30 days. Your weakest subject is Algorithms (54%). JARVIS recommends: 2 hours on Algorithms today, then 1 hour OS. Want me to generate a topic-wise study plan?</div>
+        </div>
+      </div>
+      <div class="section-title" style="margin-bottom:12px">Upcoming exams</div>
+      <div class="exam-card">
+        <div class="exam-countdown" style="background:rgba(240,97,74,.12)"><div class="cd-days" style="color:var(--coral)">12</div><div class="cd-label" style="color:var(--coral)">DAYS</div></div>
+        <div class="exam-info">
+          <div class="exam-name">Operating Systems · Mid-semester</div>
+          <div class="exam-date">April 29, 2025 · 9:00 AM · Room 301</div>
+          <div class="exam-progress-bar"><div class="exam-progress-fill fill-coral" style="width:68%"></div></div>
+        </div>
+        <div style="text-align:center"><div style="font-size:20px;font-weight:800;color:var(--text);font-family:'Syne',sans-serif">68%</div><div style="font-size:10px;color:var(--text3)">Ready</div></div>
+      </div>
+      <div class="exam-card">
+        <div class="exam-countdown" style="background:rgba(245,166,35,.1)"><div class="cd-days" style="color:var(--amber)">18</div><div class="cd-label" style="color:var(--amber)">DAYS</div></div>
+        <div class="exam-info">
+          <div class="exam-name">Algorithms · End semester</div>
+          <div class="exam-date">May 5, 2025 · 2:00 PM · Room 201</div>
+          <div class="exam-progress-bar"><div class="exam-progress-fill fill-amber" style="width:54%"></div></div>
+        </div>
+        <div style="text-align:center"><div style="font-size:20px;font-weight:800;color:var(--text);font-family:'Syne',sans-serif">54%</div><div style="font-size:10px;color:var(--text3)">Needs work</div></div>
+      </div>
+      <div class="exam-card">
+        <div class="exam-countdown" style="background:rgba(74,158,255,.1)"><div class="cd-days" style="color:var(--blue)">24</div><div class="cd-label" style="color:var(--blue)">DAYS</div></div>
+        <div class="exam-info">
+          <div class="exam-name">Computer Networks · End semester</div>
+          <div class="exam-date">May 11, 2025 · 9:00 AM · Room 105</div>
+          <div class="exam-progress-bar"><div class="exam-progress-fill fill-blue" style="width:91%"></div></div>
+        </div>
+        <div style="text-align:center"><div style="font-size:20px;font-weight:800;color:var(--teal);font-family:'Syne',sans-serif">91%</div><div style="font-size:10px;color:var(--text3)">Ready</div></div>
+      </div>
+      <div class="grid-2" style="margin-top:16px">
+        <button class="btn btn-primary" style="width:100%;padding:14px" onclick="goPage('chat',document.querySelectorAll('.nav-item')[1]);setTimeout(()=>quickMsg('Generate 10 MCQs on Operating Systems Process Scheduling for my upcoming exam'),300)">🧪 Generate mock test with AI</button>
+        <button class="btn btn-secondary" style="width:100%;padding:14px" onclick="goPage('chat',document.querySelectorAll('.nav-item')[1]);setTimeout(()=>quickMsg('Make me a 12-day study plan for my OS exam covering all topics'),300)">📋 Create AI study plan</button>
+      </div>
+    </div>
+
+    <!-- SKILLS -->
+    <div class="page" id="pg-skills">
+      <div class="greeting-title" style="font-size:20px;margin-bottom:20px">Skills Roadmap <span style="font-size:14px;color:var(--text2);font-family:'DM Sans',sans-serif;font-weight:400">— your growth tracker</span></div>
+      <div class="section-title">Technical skills</div>
+      <div class="grid-3">
+        <div class="skill-card">
+          <div class="skill-top"><div class="skill-ico" style="background:rgba(245,166,35,.12)">☕</div><div><div class="skill-name">Java / DSA</div><div class="skill-level">Intermediate</div></div></div>
+          <div class="progress-bar"><div class="progress-fill fill-amber" style="width:72%"></div></div>
+          <div style="font-size:10px;color:var(--text3);margin-top:5px">72% · Next: Graph algorithms</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-top"><div class="skill-ico" style="background:rgba(74,158,255,.12)">⚛️</div><div><div class="skill-name">React / Web Dev</div><div class="skill-level">Beginner</div></div></div>
+          <div class="progress-bar"><div class="progress-fill fill-blue" style="width:38%"></div></div>
+          <div style="font-size:10px;color:var(--text3);margin-top:5px">38% · Next: Hooks & state</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-top"><div class="skill-ico" style="background:rgba(124,111,238,.12)">🐍</div><div><div class="skill-name">Python / ML</div><div class="skill-level">Beginner</div></div></div>
+          <div class="progress-bar"><div class="progress-fill fill-purple" style="width:25%"></div></div>
+          <div style="font-size:10px;color:var(--text3);margin-top:5px">25% · Next: NumPy basics</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-top"><div class="skill-ico" style="background:rgba(29,184,122,.12)">🗄️</div><div><div class="skill-name">SQL / Databases</div><div class="skill-level">Intermediate</div></div></div>
+          <div class="progress-bar"><div class="progress-fill fill-teal" style="width:65%"></div></div>
+          <div style="font-size:10px;color:var(--text3);margin-top:5px">65% · Next: Indexing</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-top"><div class="skill-ico" style="background:rgba(240,97,74,.12)">🐙</div><div><div class="skill-name">Git / GitHub</div><div class="skill-level">Intermediate</div></div></div>
+          <div class="progress-bar"><div class="progress-fill fill-coral" style="width:80%"></div></div>
+          <div style="font-size:10px;color:var(--text3);margin-top:5px">80% · Next: Branching</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-top"><div class="skill-ico" style="background:rgba(74,158,255,.12)">☁️</div><div><div class="skill-name">Cloud / AWS</div><div class="skill-level">Beginner</div></div></div>
+          <div class="progress-bar"><div class="progress-fill fill-blue" style="width:15%"></div></div>
+          <div style="font-size:10px;color:var(--text3);margin-top:5px">15% · Next: EC2 basics</div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="section-title">Soft skills</div>
+      <div class="grid-3">
+        <div class="skill-card">
+          <div class="skill-top"><div class="skill-ico" style="background:rgba(245,166,35,.12)">🗣️</div><div><div class="skill-name">Communication</div><div class="skill-level">Good</div></div></div>
+          <div class="progress-bar"><div class="progress-fill fill-amber" style="width:75%"></div></div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-top"><div class="skill-ico" style="background:rgba(124,111,238,.12)">👥</div><div><div class="skill-name">Teamwork</div><div class="skill-level">Strong</div></div></div>
+          <div class="progress-bar"><div class="progress-fill fill-purple" style="width:85%"></div></div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-top"><div class="skill-ico" style="background:rgba(29,184,122,.12)">🧩</div><div><div class="skill-name">Problem solving</div><div class="skill-level">Intermediate</div></div></div>
+          <div class="progress-bar"><div class="progress-fill fill-teal" style="width:68%"></div></div>
+        </div>
+      </div>
+      <button class="btn btn-primary" style="margin-top:8px" onclick="goPage('chat',document.querySelectorAll('.nav-item')[1]);setTimeout(()=>quickMsg('Based on my skills progress, what should I learn next to get a software engineering job?'),300)">🤖 Ask JARVIS what to learn next</button>
+    </div>
+
+  </div>
+</main>
+
+<script>
+const SYSTEM = `You are JARVIS, the AI assistant for Campus JARVIS — a student life management platform. You are talking to Aryan Kumar, a 3rd year Computer Science student at IIT Delhi from Lucknow, UP.
+Student context:
+- Exams upcoming: Operating Systems (12 days), Algorithms (18 days), Computer Networks (24 days)
+- OS readiness: 68%, Algorithms: 54% (weakest), Computer Networks: 91%
+- Sleep average: 7.5 hours, sleep score: 82%
+- Pending payments: Hostel fee ₹8,500 (due Apr 25), Semester fee ₹3,500 (due Apr 30)
+- Habit streak: 14 days
+- Skills: Java/DSA 72%, React 38%, Python 25%, SQL 65%, Git 80%
+Be warm, smart, and concise. Use the student's context to give personalized answers. Format nicely with short paragraphs or bullets. Keep replies under 180 words unless a detailed plan is needed.`;
+
+let history = [], busy = false;
+
+function goPage(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('pg-' + id).classList.add('active');
+  if (el) el.classList.add('active');
+  const titles = {dashboard:'Good morning, Aryan 👋',chat:'Ask JARVIS',sleep:'Sleep AI',payments:'Payments',hostel:'Hostel',exams:'Exam Prep AI',skills:'Skills Roadmap'};
+  document.getElementById('page-title').textContent = titles[id] || 'Campus JARVIS';
+}
+
+function toggleTask(el) {
+  el.classList.toggle('done');
+  el.textContent = el.classList.contains('done') ? '✓' : '';
+  const txt = el.nextElementSibling;
+  txt.classList.toggle('done');
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+}
+
+function addMsg(role, html) {
+  const box = document.getElementById('chat-msgs');
+  const d = document.createElement('div');
+  d.className = 'msg-row' + (role === 'user' ? ' user' : '');
+  d.innerHTML = `<div class="msg-avatar ${role==='user'?'av-u':'av-j'}">${role==='user'?'A':'J'}</div><div class="msg-bubble ${role==='user'?'bubble-u':'bubble-j'}">${html}</div>`;
+  box.appendChild(d);
+  box.scrollTop = box.scrollHeight;
+}
+
+function showTyping() {
+  const box = document.getElementById('chat-msgs');
+  const d = document.createElement('div');
+  d.className = 'msg-row'; d.id = 'typing';
+  d.innerHTML = `<div class="msg-avatar av-j">J</div><div class="typing-bubble"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+  box.appendChild(d); box.scrollTop = box.scrollHeight;
+}
+
+function fmt(t) {
+  return t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>').replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+}
+
+async function sendChat() {
+  if (busy) return;
+  const inp = document.getElementById('chat-input');
+  const text = inp.value.trim(); if (!text) return;
+  inp.value = ''; inp.style.height = 'auto';
+  document.getElementById('send-btn').disabled = true; busy = true;
+  addMsg('user', text); history.push({role:'user',content:text}); showTyping();
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYSTEM,messages:history})});
+    const data = await res.json();
+    const reply = data.content?.map(b=>b.text||'').join('') || 'Sorry, try again.';
+    history.push({role:'assistant',content:reply});
+    document.getElementById('typing')?.remove(); addMsg('ai', fmt(reply));
+  } catch(e) { document.getElementById('typing')?.remove(); addMsg('ai','Connection error. Please try again.'); }
+  busy = false; document.getElementById('send-btn').disabled = false;
+}
+
+function quickMsg(q) {
+  document.getElementById('chat-input').value = q; sendChat();
+}
+
+// Sleep calculator
+function calcBedtime() {
+  const wake = document.getElementById('wake-time').value;
+  const [wh, wm] = wake.split(':').map(Number);
+  const wakeMinutes = wh * 60 + wm;
+  const opts = [5,6].map(cycles => {
+    let mins = wakeMinutes - (cycles * 90) - 15;
+    if (mins < 0) mins += 1440;
+    const h = Math.floor(mins / 60) % 24;
+    const m = mins % 60;
+    const label = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+    const ampm = h < 12 ? 'AM' : 'PM';
+    const h12 = h % 12 || 12;
+    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)"><span style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:${cycles===6?'var(--teal)':'var(--purple)'}">${h12}:${String(m).padStart(2,'0')} ${ampm}</span><span style="font-size:11px;color:var(--text3)">${cycles} cycles · ${cycles*1.5}h sleep</span></div>`;
+  });
+  document.getElementById('bedtime-options').innerHTML = opts.join('');
+}
+
+function setAlarm() { alert('Smart alarm set! JARVIS will wake you up at the lightest point in your sleep cycle. 🌙'); }
+
+// Sleep week chart
+const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const hrs = [7.5, 8, 5.5, 7, 8, 9, 7.5];
+document.getElementById('sleep-week').innerHTML = days.map((d,i) => {
+  const pct = (hrs[i]/10)*100;
+  const col = hrs[i] >= 7 ? 'var(--teal)' : hrs[i] >= 6 ? 'var(--amber)' : 'var(--coral)';
+  return `<div style="display:flex;align-items:center;gap:10px;padding:4px 0"><div style="font-size:11px;color:var(--text3);width:28px">${d}</div><div style="flex:1;height:8px;background:var(--bg4);border-radius:4px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${col};border-radius:4px"></div></div><div style="font-size:11px;color:var(--text);width:30px;text-align:right;font-weight:500">${hrs[i]}h</div></div>`;
+}).join('');
+
+// Room grid
+const rooms = Array.from({length:18},(_,i)=>i+1);
+const myRoom = 12, vacant = [3,7,14,16];
+document.getElementById('room-grid').innerHTML = rooms.map(r => {
+  const cls = r===myRoom?'room-you':vacant.includes(r)?'room-vacant':'room-occupied';
+  return `<div class="room-cell ${cls}"><div>${r}</div><div style="font-size:8px;margin-top:2px">${r===myRoom?'YOU':vacant.includes(r)?'FREE':'OCC'}</div></div>`;
+}).join('');
+
+// Set time
+const now = new Date();
+const days2 = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+document.getElementById('greeting-time').textContent = `${days2[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()} · ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')} ${now.getHours()<12?'AM':'PM'}`;
+
+calcBedtime();
+</script>
+</body>
+</html>
