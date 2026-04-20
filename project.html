@@ -4,241 +4,334 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Campus JARVIS</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #080910;
-  --bg2: #0e0f1a;
-  --bg3: #13141f;
-  --bg4: #1a1b28;
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.12);
-  --purple: #7c6fee;
-  --purple2: #5a50c8;
-  --purple-glow: rgba(124,111,238,0.15);
-  --teal: #1db87a;
-  --teal-glow: rgba(29,184,122,0.12);
-  --coral: #f0614a;
-  --amber: #f5a623;
-  --blue: #4a9eff;
-  --text: #e8e9f0;
-  --text2: #8b8da0;
-  --text3: #5a5b6e;
-  --r: 12px;
-  --r2: 16px;
+:root{
+  --bg:#060711;--bg2:#0b0d1a;--bg3:#10122b;--bg4:#161830;--bg5:#1c1e38;
+  --border:rgba(255,255,255,0.055);--border2:rgba(255,255,255,0.1);--border3:rgba(255,255,255,0.16);
+  --v:#7c5cfc;--v2:#6344e0;--v3:#4f35bb;--vg:rgba(124,92,252,0.15);
+  --cy:#00d4aa;--cyg:rgba(0,212,170,0.12);
+  --pk:#ff4d8d;--pkg:rgba(255,77,141,0.12);
+  --am:#ffb547;--amg:rgba(255,181,71,0.1);
+  --sky:#38c0ff;--skyg:rgba(56,192,255,0.1);
+  --pu:#c084fc;
+  --text:#f0f1ff;--text2:#9294b0;--text3:#4e5070;--text4:#2e3050;
+  --r:10px;--r2:14px;--r3:20px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;overflow:hidden}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);display:flex;font-size:14px;position:relative}
 
-/* SIDEBAR */
-.sidebar{width:220px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:20px 0;z-index:10}
-.logo{padding:0 20px 24px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
-.logo-orb{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--purple),var(--teal));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:13px;color:#fff;flex-shrink:0}
-.logo-text{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:var(--text)}
-.logo-sub{font-size:10px;color:var(--text3);margin-top:1px}
-.nav{flex:1;padding:16px 12px;display:flex;flex-direction:column;gap:2px}
-.nav-section{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;padding:10px 8px 6px;margin-top:8px}
-.nav-section:first-child{margin-top:0}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;cursor:pointer;transition:all .15s;font-size:13px;color:var(--text2);font-weight:500;border:1px solid transparent}
-.nav-item:hover{background:var(--bg4);color:var(--text)}
-.nav-item.active{background:var(--purple-glow);color:var(--purple);border-color:rgba(124,111,238,0.2)}
-.nav-icon{width:16px;height:16px;flex-shrink:0;opacity:.8}
-.nav-item.active .nav-icon{opacity:1}
-.nav-badge{margin-left:auto;font-size:10px;background:var(--coral);color:#fff;padding:1px 6px;border-radius:20px;font-weight:600}
-.sidebar-bottom{padding:16px 12px;border-top:1px solid var(--border)}
-.student-card{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:var(--bg3);cursor:pointer;transition:background .15s}
-.student-card:hover{background:var(--bg4)}
-.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--blue));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:11px;color:#fff;flex-shrink:0}
-.student-info{flex:1;min-width:0}
-.student-name{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.student-college{font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* AMBIENT GLOWS */
+body::before{content:'';position:fixed;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,92,252,.07) 0%,transparent 70%);top:-100px;left:-100px;pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(0,212,170,.05) 0%,transparent 70%);bottom:-80px;right:100px;pointer-events:none;z-index:0}
 
-/* MAIN */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
-.topbar{height:56px;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:16px;flex-shrink:0;background:var(--bg)}
-.topbar-title{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--text);flex:1}
-.topbar-status{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--teal);background:var(--teal-glow);padding:5px 12px;border-radius:20px;border:1px solid rgba(29,184,122,0.2)}
-.status-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);animation:statusPulse 2s infinite}
-@keyframes statusPulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(29,184,122,.4)}50%{opacity:.7;box-shadow:0 0 0 4px rgba(29,184,122,0)}}
-.topbar-btn{width:34px;height:34px;border-radius:9px;border:1px solid var(--border2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;color:var(--text2)}
-.topbar-btn:hover{background:var(--bg3);color:var(--text)}
-.content{flex:1;overflow-y:auto;padding:28px;scroll-behavior:smooth}
-.content::-webkit-scrollbar{width:4px}
-.content::-webkit-scrollbar-track{background:transparent}
-.content::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
+/* ─── SIDEBAR ─── */
+.sidebar{width:220px;flex-shrink:0;background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:0;z-index:10;position:relative}
+.logo{padding:20px 18px 18px;display:flex;align-items:center;gap:11px;border-bottom:1px solid var(--border)}
+.logo-orb{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,var(--v),var(--pu));display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:#fff;flex-shrink:0;box-shadow:0 0 24px rgba(124,92,252,.4),inset 0 1px 0 rgba(255,255,255,.15)}
+.logo-t{font-weight:800;font-size:14.5px;color:var(--text);letter-spacing:-.02em}
+.logo-s{font-size:10px;color:var(--text3);margin-top:1px;font-weight:500}
+.nav{flex:1;padding:12px 10px;display:flex;flex-direction:column;gap:1px;overflow-y:auto}
+.nav::-webkit-scrollbar{display:none}
+.nav-sec{font-size:9px;font-weight:700;color:var(--text4);letter-spacing:.12em;text-transform:uppercase;padding:12px 8px 5px;margin-top:2px}
+.nav-sec:first-child{padding-top:4px}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;cursor:pointer;transition:all .16s;font-size:12.5px;color:var(--text3);font-weight:500;border:1px solid transparent;position:relative;white-space:nowrap}
+.ni:hover{background:var(--bg4);color:var(--text2)}
+.ni.active{background:linear-gradient(135deg,rgba(124,92,252,.18),rgba(124,92,252,.08));color:var(--v);border-color:rgba(124,92,252,.22);font-weight:600}
+.ni svg{width:14px;height:14px;flex-shrink:0;opacity:.6}
+.ni.active svg{opacity:1}
+.nb{margin-left:auto;font-size:9px;background:var(--pk);color:#fff;padding:1px 6px;border-radius:20px;font-weight:800}
+.nb.g{background:var(--cy)}
+.nb.a{background:var(--am);color:#000}
+.sb-bot{padding:14px 10px;border-top:1px solid var(--border)}
+.sc{display:flex;align-items:center;gap:9px;padding:10px 10px;border-radius:11px;background:var(--bg3);cursor:pointer;transition:all .15s;border:1px solid var(--border)}
+.sc:hover{background:var(--bg4);border-color:var(--border2)}
+.av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--v2),var(--cy));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:#fff;flex-shrink:0;font-family:'Outfit',sans-serif}
+.s-nm{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s-cl{font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.ep-btn{width:24px;height:24px;border-radius:7px;border:1px solid var(--border2);background:transparent;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;font-size:11px}
+.ep-btn:hover{background:var(--bg5);color:var(--text)}
 
-/* PAGES */
-.page{display:none;animation:fadeUp .25s ease}
+/* ─── MAIN ─── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;z-index:1}
+.topbar{height:56px;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 26px;gap:12px;flex-shrink:0;background:rgba(6,7,17,.88);backdrop-filter:blur(16px);z-index:5}
+.tb-title{font-weight:800;font-size:16px;color:var(--text);flex:1;letter-spacing:-.02em}
+.tb-online{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--cy);background:var(--cyg);padding:4px 12px;border-radius:20px;border:1px solid rgba(0,212,170,.2);font-weight:600}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--cy);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,212,170,.5)}50%{opacity:.6;box-shadow:0 0 0 5px rgba(0,212,170,0)}}
+.tb-btn{width:34px;height:34px;border-radius:9px;border:1px solid var(--border2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;color:var(--text3)}
+.tb-btn:hover{background:var(--bg3);color:var(--text)}
+.content{flex:1;overflow-y:auto;padding:26px;scroll-behavior:smooth}
+.content::-webkit-scrollbar{width:3px}
+.content::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:2px}
+.page{display:none;animation:fu .22s ease}
 .page.active{display:block}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-/* CARDS */
+/* ─── LAYOUT ─── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:20px}
-.card-sm{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px}
+.card-sm{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px}
+.sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sec-t{font-weight:700;font-size:13.5px;color:var(--text);letter-spacing:-.01em}
+.sec-a{font-size:11px;color:var(--v);cursor:pointer;font-weight:600;padding:4px 11px;border-radius:7px;border:1px solid rgba(124,92,252,.22);background:rgba(124,92,252,.09);transition:all .15s}
+.sec-a:hover{background:rgba(124,92,252,.18)}
+.divider{height:1px;background:var(--border);margin:16px 0}
 
-/* DASHBOARD */
-.greeting{margin-bottom:28px}
-.greeting-time{font-size:12px;color:var(--text3);margin-bottom:6px;font-weight:500}
-.greeting-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--text);line-height:1.2;margin-bottom:8px}
-.greeting-title span{background:linear-gradient(135deg,var(--purple),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.greeting-sub{font-size:14px;color:var(--text2);line-height:1.6}
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
-.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:18px;position:relative;overflow:hidden;transition:border-color .2s,transform .2s;cursor:default}
-.stat-card:hover{border-color:var(--border2);transform:translateY(-2px)}
-.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:var(--r2) var(--r2) 0 0}
-.stat-card.purple::before{background:linear-gradient(90deg,var(--purple),transparent)}
-.stat-card.teal::before{background:linear-gradient(90deg,var(--teal),transparent)}
-.stat-card.coral::before{background:linear-gradient(90deg,var(--coral),transparent)}
-.stat-card.amber::before{background:linear-gradient(90deg,var(--amber),transparent)}
-.stat-label{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.05em;text-transform:uppercase;margin-bottom:10px}
-.stat-value{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--text);line-height:1}
+/* ─── STAT CARDS ─── */
+.stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:18px;position:relative;overflow:hidden;transition:all .22s;cursor:default}
+.stat:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.stat-bar{position:absolute;top:0;left:0;right:0;height:2px}
+.stat-lbl{font-size:10.5px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:9px}
+.stat-val{font-weight:800;font-size:26px;color:var(--text);line-height:1;letter-spacing:-.03em}
 .stat-sub{font-size:11px;color:var(--text3);margin-top:6px}
-.stat-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:28px;opacity:.15}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
-.section-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
-.section-link{font-size:12px;color:var(--purple);font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer}
-.section-link:hover{text-decoration:underline}
+.stat-ico{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:26px;opacity:.1}
 
-/* JARVIS AI MESSAGE */
-.jarvis-banner{background:linear-gradient(135deg,rgba(124,111,238,.12),rgba(29,184,122,.08));border:1px solid rgba(124,111,238,.25);border-radius:var(--r2);padding:18px 20px;margin-bottom:24px;display:flex;gap:14px;align-items:flex-start}
-.jarvis-orb-sm{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--teal));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.jarvis-msg{flex:1}
-.jarvis-msg-label{font-size:10px;font-weight:700;color:var(--purple);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
-.jarvis-msg-text{font-size:13px;color:var(--text);line-height:1.7}
+/* ─── JARVIS BANNER ─── */
+.jb{background:linear-gradient(135deg,rgba(124,92,252,.1),rgba(0,212,170,.06));border:1px solid rgba(124,92,252,.2);border-radius:var(--r2);padding:16px 18px;margin-bottom:22px;display:flex;gap:13px;align-items:flex-start}
+.jorb{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--cy));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;box-shadow:0 0 20px rgba(124,92,252,.35)}
+.jlbl{font-size:9.5px;font-weight:800;color:var(--v);letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}
+.jtxt{font-size:13px;color:var(--text);line-height:1.75;flex:1}
 
-/* TASK LIST */
-.task-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border)}
+/* ─── TASKS ─── */
+.task-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);transition:opacity .2s}
 .task-item:last-child{border-bottom:none}
-.task-check{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border2);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.task-check:hover{border-color:var(--purple)}
-.task-check.done{background:var(--teal);border-color:var(--teal)}
-.task-text{font-size:13px;color:var(--text);flex:1}
+.task-check{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border3);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:9px;color:#fff}
+.task-check:hover{border-color:var(--v)}
+.task-check.done{background:var(--cy);border-color:var(--cy)}
+.task-text{font-size:12.5px;color:var(--text);flex:1;line-height:1.4}
 .task-text.done{color:var(--text3);text-decoration:line-through}
-.task-tag{font-size:10px;padding:3px 8px;border-radius:20px;font-weight:600}
-.tag-purple{background:rgba(124,111,238,.15);color:var(--purple)}
-.tag-teal{background:rgba(29,184,122,.15);color:var(--teal)}
-.tag-coral{background:rgba(240,97,74,.15);color:var(--coral)}
-.tag-amber{background:rgba(245,166,35,.15);color:var(--amber)}
+.task-tag{font-size:9.5px;padding:2px 8px;border-radius:20px;font-weight:700;flex-shrink:0;cursor:pointer}
+.tt-v{background:rgba(124,92,252,.15);color:var(--v)}
+.tt-c{background:rgba(0,212,170,.15);color:var(--cy)}
+.tt-p{background:rgba(255,77,141,.15);color:var(--pk)}
+.tt-a{background:rgba(255,181,71,.15);color:var(--am)}
+.tt-s{background:rgba(56,192,255,.15);color:var(--sky)}
+.task-del{width:22px;height:22px;border-radius:5px;border:none;background:transparent;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:all .15s;flex-shrink:0;font-size:14px}
+.task-item:hover .task-del{opacity:1}
+.task-del:hover{background:rgba(255,77,141,.15);color:var(--pk)}
+.task-prio{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.add-row{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.ai-inp{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;font-size:12.5px;color:var(--text);font-family:'Outfit',sans-serif;outline:none;transition:border-color .15s}
+.ai-inp:focus{border-color:rgba(124,92,252,.5)}
+.ai-inp::placeholder{color:var(--text3)}
+.ai-btn{padding:8px 16px;border-radius:8px;background:linear-gradient(135deg,var(--v2),var(--v));border:none;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:opacity .15s;white-space:nowrap;box-shadow:0 0 14px rgba(124,92,252,.3)}
+.ai-btn:hover{opacity:.85}
 
-/* PROGRESS BARS */
-.progress-item{margin-bottom:14px}
-.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.progress-label{font-size:12px;color:var(--text);font-weight:500}
-.progress-pct{font-size:12px;color:var(--text2)}
-.progress-bar{height:6px;background:var(--bg4);border-radius:3px;overflow:hidden}
-.progress-fill{height:100%;border-radius:3px;transition:width .8s ease}
-.fill-purple{background:linear-gradient(90deg,var(--purple2),var(--purple))}
-.fill-teal{background:linear-gradient(90deg,#0f8f5a,var(--teal))}
-.fill-amber{background:linear-gradient(90deg,#c07d0a,var(--amber))}
-.fill-coral{background:linear-gradient(90deg,#c03820,var(--coral))}
-.fill-blue{background:linear-gradient(90deg,#1a6fd4,var(--blue))}
+/* ─── PROGRESS ─── */
+.pb{height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-top:6px}
+.pf{height:100%;border-radius:3px;transition:width 1.1s ease}
+.pv{background:linear-gradient(90deg,var(--v3),var(--v))}
+.pc{background:linear-gradient(90deg,#009e7e,var(--cy))}
+.pp{background:linear-gradient(90deg,#c0155e,var(--pk))}
+.pa{background:linear-gradient(90deg,#c07d00,var(--am))}
+.ps{background:linear-gradient(90deg,#1a8fd4,var(--sky))}
+.pu2{background:linear-gradient(90deg,#7c3aed,var(--pu))}
 
-/* SLEEP RING */
-.sleep-display{display:flex;align-items:center;gap:24px;padding:8px 0}
-.sleep-ring{position:relative;width:100px;height:100px;flex-shrink:0}
-.sleep-ring svg{transform:rotate(-90deg)}
-.sleep-ring-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
-.sleep-ring-hrs{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--text)}
-.sleep-ring-sub{font-size:9px;color:var(--text3);font-weight:500}
-.sleep-info{flex:1}
-.sleep-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px}
-.sleep-row:last-child{border-bottom:none}
-.sleep-key{color:var(--text3)}
-.sleep-val{color:var(--text);font-weight:500}
+/* ─── EXAM CARDS ─── */
+.ec{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:13px;position:relative;overflow:hidden;transition:all .16s}
+.ec::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.ec:hover{border-color:var(--border2);background:var(--bg4)}
+.ec-cv{display:flex;flex-direction:column;align-items:center;justify-content:center;width:52px;height:52px;border-radius:12px;flex-shrink:0}
+.ec-days{font-weight:900;font-size:18px;line-height:1}
+.ec-lbl{font-size:8.5px;font-weight:700;letter-spacing:.06em;margin-top:2px;opacity:.8}
+.ec-info{flex:1;min-width:0}
+.ec-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px}
+.ec-meta{font-size:10.5px;color:var(--text3)}
+.ec-epb{height:3.5px;background:var(--bg);border-radius:2px;overflow:hidden;margin-top:8px}
+.ec-epl{height:100%;border-radius:2px}
+.ec-right{text-align:right;flex-shrink:0}
+.ec-pct{font-weight:800;font-size:20px;font-family:'JetBrains Mono',monospace;letter-spacing:-.02em}
+.ec-btns{display:flex;gap:5px;margin-top:4px;justify-content:flex-end}
+.ec-btn{font-size:10px;padding:3px 9px;border-radius:20px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;transition:all .15s;border:1px solid}
+.ec-tip{background:rgba(124,92,252,.1);border-color:rgba(124,92,252,.22);color:var(--v)}
+.ec-tip:hover{background:rgba(124,92,252,.22)}
+.ec-edit{background:rgba(56,192,255,.08);border-color:rgba(56,192,255,.2);color:var(--sky)}
+.ec-edit:hover{background:rgba(56,192,255,.18)}
+.ec-del{background:rgba(255,77,141,.08);border-color:rgba(255,77,141,.18);color:var(--pk)}
+.ec-del:hover{background:rgba(255,77,141,.18)}
 
-/* PAYMENT ITEMS */
-.payment-item{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--border)}
-.payment-item:last-child{border-bottom:none}
+/* ─── SKILL CARDS ─── */
+.skc{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:13px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.skc:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.sk-hint{position:absolute;top:7px;right:7px;font-size:9px;color:var(--v);opacity:0;transition:opacity .2s;font-weight:700;background:rgba(124,92,252,.12);padding:2px 6px;border-radius:8px}
+.skc:hover .sk-hint{opacity:1}
+.sk-del{position:absolute;bottom:7px;right:7px;width:20px;height:20px;border-radius:5px;border:none;background:rgba(255,77,141,.1);color:var(--pk);cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:all .15s;font-size:13px}
+.skc:hover .sk-del{opacity:1}
+.sk-del:hover{background:rgba(255,77,141,.25)}
+.sk-top{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.sk-ico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.sk-nm{font-size:13px;font-weight:700;color:var(--text)}
+.sk-lv{font-size:10px;color:var(--text3)}
+
+/* ─── SLEEP PAGE SPECIAL ─── */
+.sleep-ring-wrap{position:relative;width:110px;height:110px;flex-shrink:0}
+.sleep-ring-wrap svg{transform:rotate(-90deg)}
+.ring-lbl{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.ring-hrs{font-weight:800;font-size:20px;color:var(--text);line-height:1;font-family:'JetBrains Mono',monospace}
+.ring-sub{font-size:9px;color:var(--text3);font-weight:600;margin-top:2px}
+.sleep-stat-box{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px;text-align:center}
+.ssb-val{font-weight:800;font-size:20px;line-height:1;font-family:'JetBrains Mono',monospace}
+.ssb-lbl{font-size:10px;color:var(--text3);margin-top:3px}
+.sleep-edit-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.sleep-edit-row:last-child{border-bottom:none}
+.se-day{font-size:11px;color:var(--text3);width:28px;font-weight:600}
+.se-bar-wrap{flex:1;height:8px;background:var(--bg4);border-radius:4px;overflow:hidden;cursor:pointer;position:relative}
+.se-bar-fill{height:100%;border-radius:4px;transition:width .3s ease}
+.se-hrs{font-size:11px;color:var(--text);width:32px;text-align:right;font-weight:700;font-family:'JetBrains Mono',monospace}
+.se-inp{width:44px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:3px 6px;font-size:11px;color:var(--text);font-family:'Outfit',sans-serif;outline:none;text-align:center;transition:border-color .15s}
+.se-inp:focus{border-color:rgba(124,92,252,.5)}
+
+/* ─── ALARM PAGE ─── */
+.alarm-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:13px;transition:all .15s}
+.alarm-card.active-alarm{border-color:rgba(0,212,170,.25);background:linear-gradient(135deg,rgba(0,212,170,.06),var(--bg3))}
+.alarm-toggle{width:36px;height:20px;border-radius:10px;background:var(--bg4);border:1px solid var(--border2);cursor:pointer;position:relative;transition:all .25s;flex-shrink:0}
+.alarm-toggle.on{background:var(--cy);border-color:var(--cy)}
+.alarm-toggle::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;top:2px;left:2px;transition:transform .25s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.alarm-toggle.on::after{transform:translateX(16px)}
+.alarm-info{flex:1}
+.alarm-time{font-weight:800;font-size:22px;color:var(--text);font-family:'JetBrains Mono',monospace;letter-spacing:-.02em;line-height:1}
+.alarm-label{font-size:11px;color:var(--text3);margin-top:3px}
+.alarm-days{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}
+.ad{width:24px;height:24px;border-radius:50%;background:var(--bg4);border:1px solid var(--border);font-size:9.5px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;color:var(--text3)}
+.ad.on{background:var(--v);border-color:var(--v);color:#fff}
+.ad:hover:not(.on){border-color:var(--border3);color:var(--text)}
+.alarm-del{border:none;background:rgba(255,77,141,.1);color:var(--pk);width:28px;height:28px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .15s;flex-shrink:0}
+.alarm-del:hover{background:rgba(255,77,141,.25)}
+.bedtime-opt{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;border-radius:6px;padding-inline:8px;margin-inline:-8px}
+.bedtime-opt:hover{background:rgba(124,92,252,.06)}
+.bedtime-opt:last-child{border-bottom:none}
+
+/* ─── PAYMENT PAGE ─── */
+.pay-item{display:flex;align-items:center;gap:13px;padding:12px 0;border-bottom:1px solid var(--border)}
+.pay-item:last-child{border-bottom:none}
 .pay-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.pay-info{flex:1}
-.pay-name{font-size:13px;font-weight:500;color:var(--text)}
-.pay-date{font-size:11px;color:var(--text3);margin-top:2px}
-.pay-amount{font-family:'Syne',sans-serif;font-size:14px;font-weight:700}
-.pay-paid{color:var(--teal)}
-.pay-due{color:var(--coral)}
-.pay-status{font-size:10px;padding:3px 8px;border-radius:20px;margin-top:4px;font-weight:600;text-align:center}
-.status-paid{background:rgba(29,184,122,.12);color:var(--teal)}
-.status-due{background:rgba(240,97,74,.12);color:var(--coral)}
-.status-upcoming{background:rgba(74,158,255,.12);color:var(--blue)}
+.pay-nm{font-size:13px;font-weight:600;color:var(--text)}
+.pay-dt{font-size:10.5px;color:var(--text3);margin-top:2px}
+.pay-amt{font-weight:800;font-size:14px;font-family:'JetBrains Mono',monospace}
+.pay-g{color:var(--cy)}
+.pay-r{color:var(--pk)}
+.pay-a{color:var(--am)}
+.pay-badge{font-size:9.5px;padding:2px 8px;border-radius:20px;margin-top:3px;font-weight:700;text-align:center;display:inline-block}
+.pb-due{background:rgba(255,77,141,.12);color:var(--pk)}
+.pb-paid{background:rgba(0,212,170,.12);color:var(--cy)}
+.pb-soon{background:rgba(255,181,71,.12);color:var(--am)}
+.pay-del{border:none;background:transparent;color:var(--text3);cursor:pointer;opacity:0;transition:all .15s;padding:4px;border-radius:5px;font-size:13px}
+.pay-item:hover .pay-del{opacity:1}
+.pay-del:hover{color:var(--pk);background:rgba(255,77,141,.1)}
+.pay-edit-btn{border:none;background:transparent;color:var(--text3);cursor:pointer;opacity:0;transition:all .15s;padding:4px;border-radius:5px;font-size:11px;font-family:'Outfit',sans-serif}
+.pay-item:hover .pay-edit-btn{opacity:1}
+.pay-edit-btn:hover{color:var(--sky);background:rgba(56,192,255,.1)}
 
-/* EXAM CARDS */
-.exam-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .15s}
-.exam-card:hover{border-color:var(--border2);background:var(--bg4)}
-.exam-countdown{width:52px;height:52px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
-.cd-days{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;line-height:1}
-.cd-label{font-size:9px;font-weight:600;letter-spacing:.05em;margin-top:2px}
-.exam-info{flex:1}
-.exam-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
-.exam-date{font-size:11px;color:var(--text3)}
-.exam-progress-bar{height:4px;background:var(--bg);border-radius:2px;overflow:hidden;margin-top:8px}
-.exam-progress-fill{height:100%;border-radius:2px}
+/* ─── TODO SECTION ─── */
+.todo-col{display:flex;flex-direction:column;gap:8px}
+.todo-col-hd{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.todo-col-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.todo-col-t{font-weight:700;font-size:12.5px;color:var(--text)}
+.todo-col-count{font-size:10px;color:var(--text3);background:var(--bg4);padding:2px 8px;border-radius:20px;font-weight:600;margin-left:auto}
+.todo-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px;transition:all .16s;position:relative;cursor:default}
+.todo-card:hover{border-color:var(--border2);background:var(--bg4)}
+.todo-card-title{font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:5px;line-height:1.4}
+.todo-card-meta{font-size:10.5px;color:var(--text3);display:flex;align-items:center;gap:8px}
+.todo-card-prio{display:inline-block;font-size:9.5px;padding:2px 8px;border-radius:20px;font-weight:700;margin-bottom:7px}
+.todo-card-del{position:absolute;top:8px;right:8px;border:none;background:transparent;color:var(--text3);cursor:pointer;opacity:0;transition:all .15s;padding:3px;border-radius:5px;font-size:13px;line-height:1}
+.todo-card:hover .todo-card-del{opacity:1}
+.todo-card-del:hover{color:var(--pk);background:rgba(255,77,141,.12)}
+.todo-card-check{position:absolute;bottom:8px;right:8px;border:none;background:transparent;color:var(--text3);cursor:pointer;opacity:0;transition:all .15s;padding:3px;border-radius:5px;font-size:11px}
+.todo-card:hover .todo-card-check{opacity:1}
+.todo-card-check:hover{color:var(--cy);background:rgba(0,212,170,.1)}
+.todo-done .todo-card-title{text-decoration:line-through;color:var(--text3)}
+.kanban-wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
 
-/* SKILLS */
-.skill-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;cursor:pointer;transition:all .2s}
-.skill-card:hover{border-color:var(--border2);transform:translateY(-2px)}
-.skill-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.skill-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.skill-name{font-size:13px;font-weight:600;color:var(--text)}
-.skill-level{font-size:10px;color:var(--text3)}
-
-/* CHAT */
-.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 56px - 56px);max-height:700px}
-.chat-messages{flex:1;overflow-y:auto;padding:0 0 16px;display:flex;flex-direction:column;gap:12px}
-.chat-messages::-webkit-scrollbar{width:3px}
-.chat-messages::-webkit-scrollbar-thumb{background:var(--bg4)}
-.msg-row{display:flex;gap:10px;align-items:flex-start;animation:fadeUp .2s ease}
+/* ─── CHAT ─── */
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 120px)}
+.chat-msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:11px;padding-bottom:14px}
+.chat-msgs::-webkit-scrollbar{width:3px}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--bg4)}
+.msg-row{display:flex;gap:9px;align-items:flex-start;animation:fu .18s ease}
 .msg-row.user{flex-direction:row-reverse}
-.msg-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
-.av-j{background:linear-gradient(135deg,var(--purple),var(--teal));color:#fff;font-family:'Syne',sans-serif}
-.av-u{background:var(--bg4);color:var(--text2);border:1px solid var(--border2)}
-.msg-bubble{max-width:75%;padding:11px 15px;border-radius:14px;font-size:13px;line-height:1.7;color:var(--text)}
-.bubble-j{background:var(--bg3);border:1px solid var(--border);border-radius:4px 14px 14px 14px}
-.bubble-u{background:linear-gradient(135deg,var(--purple2),var(--purple));border-radius:14px 4px 14px 14px;color:#fff}
-.typing-bubble{background:var(--bg3);border:1px solid var(--border);border-radius:4px 14px 14px 14px;padding:14px 18px;display:flex;gap:5px;align-items:center}
-.typing-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);animation:typingBounce .9s infinite}
-.typing-dot:nth-child(2){animation-delay:.15s}
-.typing-dot:nth-child(3){animation-delay:.3s}
-@keyframes typingBounce{0%,80%,100%{transform:translateY(0);opacity:.5}40%{transform:translateY(-5px);opacity:1}}
-.quick-chips{display:flex;gap:7px;flex-wrap:wrap;padding:12px 0}
-.qchip{font-size:11px;padding:6px 12px;border-radius:20px;border:1px solid var(--border2);color:var(--text2);cursor:pointer;background:transparent;transition:all .15s;white-space:nowrap;font-family:'DM Sans',sans-serif}
-.qchip:hover{background:var(--bg3);color:var(--text);border-color:var(--purple)}
-.chat-input-row{display:flex;gap:10px;align-items:flex-end;padding-top:12px;border-top:1px solid var(--border)}
-.chat-input-wrap{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:14px;padding:10px 14px;display:flex;gap:10px;align-items:flex-end;transition:border-color .15s}
-.chat-input-wrap:focus-within{border-color:rgba(124,111,238,.5)}
-#chat-input{flex:1;background:transparent;border:none;outline:none;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;resize:none;max-height:100px;min-height:22px;line-height:1.5}
-#chat-input::placeholder{color:var(--text3)}
-.send-btn{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--purple2),var(--purple));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s}
-.send-btn:hover{opacity:.85}
-.send-btn:disabled{opacity:.35;cursor:not-allowed}
+.msg-av{width:29px;height:29px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0}
+.av-j{background:linear-gradient(135deg,var(--v2),var(--cy));color:#fff}
+.av-u{background:var(--bg4);color:var(--text3);border:1px solid var(--border2)}
+.msg-bub{max-width:76%;padding:11px 15px;border-radius:14px;font-size:13px;line-height:1.7;color:var(--text)}
+.bub-j{background:var(--bg3);border:1px solid var(--border);border-radius:4px 14px 14px 14px}
+.bub-u{background:linear-gradient(135deg,var(--v3),var(--v));border-radius:14px 4px 14px 14px;color:#fff}
+.typ-bub{background:var(--bg3);border:1px solid var(--border);border-radius:4px 14px 14px 14px;padding:13px 17px;display:flex;gap:5px;align-items:center}
+.td{width:6px;height:6px;border-radius:50%;background:var(--text3);animation:tb .9s infinite}
+.td:nth-child(2){animation-delay:.15s}.td:nth-child(3){animation-delay:.3s}
+@keyframes tb{0%,80%,100%{transform:translateY(0);opacity:.5}40%{transform:translateY(-5px);opacity:1}}
+.chips{display:flex;gap:6px;flex-wrap:wrap;padding:10px 0}
+.chip{font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid var(--border2);color:var(--text3);cursor:pointer;background:transparent;transition:all .15s;white-space:nowrap;font-family:'Outfit',sans-serif;font-weight:500}
+.chip:hover{background:var(--bg3);color:var(--text);border-color:rgba(124,92,252,.4)}
+.ci-row{display:flex;gap:9px;align-items:flex-end;padding-top:11px;border-top:1px solid var(--border)}
+.ci-wrap{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:13px;padding:9px 13px;display:flex;gap:9px;align-items:flex-end;transition:border-color .15s}
+.ci-wrap:focus-within{border-color:rgba(124,92,252,.5)}
+#ci{flex:1;background:transparent;border:none;outline:none;font-size:13px;color:var(--text);font-family:'Outfit',sans-serif;resize:none;max-height:90px;min-height:20px;line-height:1.5}
+#ci::placeholder{color:var(--text3)}
+.send-btn{width:35px;height:35px;border-radius:9px;background:linear-gradient(135deg,var(--v2),var(--v));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 16px rgba(124,92,252,.4);transition:opacity .15s}
+.send-btn:hover{opacity:.85}.send-btn:disabled{opacity:.3;cursor:not-allowed}
 
-/* HOSTEL */
-.room-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:20px}
-.room-cell{aspect-ratio:1;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;font-weight:600;cursor:pointer;transition:all .15s;border:1px solid transparent}
-.room-occupied{background:var(--bg4);color:var(--text3);border-color:var(--border)}
-.room-you{background:linear-gradient(135deg,var(--purple2),var(--purple));color:#fff}
-.room-vacant{background:rgba(29,184,122,.1);color:var(--teal);border-color:rgba(29,184,122,.2)}
+/* ─── MODALS ─── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.68);z-index:100;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(7px);animation:fi .17s ease}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:20px;width:460px;max-width:92vw;padding:26px;position:relative;animation:mu .2s ease;max-height:86vh;overflow-y:auto}
+.modal::-webkit-scrollbar{width:3px}
+.modal::-webkit-scrollbar-thumb{background:var(--bg5)}
+@keyframes mu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.modal-t{font-weight:800;font-size:17px;color:var(--text);margin-bottom:20px;letter-spacing:-.02em}
+.mcls{position:absolute;top:16px;right:16px;width:28px;height:28px;border-radius:7px;border:1px solid var(--border2);background:transparent;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s}
+.mcls:hover{background:var(--bg4);color:var(--text)}
+.fg{margin-bottom:14px}
+.fl{font-size:10.5px;font-weight:700;color:var(--text2);margin-bottom:6px;display:block;text-transform:uppercase;letter-spacing:.06em}
+.fi2{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:9px;padding:9px 13px;font-size:13px;color:var(--text);font-family:'Outfit',sans-serif;outline:none;transition:border-color .15s}
+.fi2:focus{border-color:rgba(124,92,252,.5)}
+.fi2::placeholder{color:var(--text3)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fsel{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:9px;padding:9px 13px;font-size:13px;color:var(--text);font-family:'Outfit',sans-serif;outline:none;transition:border-color .15s;appearance:none;cursor:pointer}
+.fsel:focus{border-color:rgba(124,92,252,.5)}
+.btn{padding:9px 18px;border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .16s;border:none;letter-spacing:-.01em}
+.btn-p{background:linear-gradient(135deg,var(--v2),var(--v));color:#fff;box-shadow:0 0 18px rgba(124,92,252,.3)}
+.btn-p:hover{opacity:.9;transform:translateY(-1px)}
+.btn-s{background:var(--bg4);color:var(--text);border:1px solid var(--border2)}
+.btn-s:hover{background:var(--bg5)}
+.btn-d{background:rgba(255,77,141,.1);color:var(--pk);border:1px solid rgba(255,77,141,.18)}
+.btn-d:hover{background:rgba(255,77,141,.22)}
+
+/* ─── TOAST ─── */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg3);border:1px solid var(--border2);border-radius:13px;padding:13px 18px;display:flex;gap:11px;align-items:center;z-index:200;box-shadow:0 10px 34px rgba(0,0,0,.45);animation:tin .26s ease;max-width:310px}
+.toast.out{animation:tout .26s ease forwards}
+@keyframes tin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes tout{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(12px)}}
+.t-ico{font-size:20px;flex-shrink:0}
+.t-txt{font-size:13px;color:var(--text);font-weight:600}
+.t-sub{font-size:11px;color:var(--text3);margin-top:1px}
+
+/* ─── GREETING ─── */
+.g-time{font-size:11.5px;color:var(--text3);margin-bottom:5px;font-weight:500}
+.g-title{font-weight:900;font-size:26px;color:var(--text);line-height:1.2;margin-bottom:8px;letter-spacing:-.03em}
+.g-title em{font-style:normal;background:linear-gradient(120deg,var(--v),var(--pu),var(--cy));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.g-sub{font-size:13px;color:var(--text2);line-height:1.6}
+
+/* ─── LOADING ─── */
+.jld{display:flex;gap:5px;align-items:center}
+.jld span{width:5px;height:5px;border-radius:50%;background:var(--v);animation:tb .9s infinite}
+.jld span:nth-child(2){animation-delay:.15s}.jld span:nth-child(3){animation-delay:.3s}
+
+/* ─── HOSTEL ─── */
+.room-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-bottom:16px}
+.room-cell{aspect-ratio:1;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;font-weight:700;cursor:pointer;transition:all .15s;border:1px solid transparent}
+.r-occ{background:var(--bg4);color:var(--text3);border-color:var(--border)}
+.r-you{background:linear-gradient(135deg,var(--v2),var(--v));color:#fff;box-shadow:0 0 14px rgba(124,92,252,.4)}
+.r-free{background:rgba(0,212,170,.1);color:var(--cy);border-color:rgba(0,212,170,.2)}
 .room-cell:hover{transform:scale(1.08)}
 
-/* NOTIFICATION DOT */
-.notif-dot{width:8px;height:8px;border-radius:50%;background:var(--coral);border:2px solid var(--bg2)}
-
-/* RESPONSIVE HELPERS */
-.flex{display:flex}
-.flex-col{display:flex;flex-direction:column}
-.items-center{align-items:center}
-.gap-2{gap:8px}
-.gap-3{gap:12px}
-.mt-4{margin-top:16px}
-.mb-4{margin-bottom:16px}
-.text-muted{color:var(--text2);font-size:12px}
-.fw-600{font-weight:600}
-.divider{height:1px;background:var(--border);margin:14px 0}
-.btn{padding:9px 18px;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;border:none}
-.btn-primary{background:linear-gradient(135deg,var(--purple2),var(--purple));color:#fff}
-.btn-primary:hover{opacity:.9;transform:translateY(-1px)}
-.btn-secondary{background:var(--bg4);color:var(--text);border:1px solid var(--border2)}
-.btn-secondary:hover{background:var(--bg3);border-color:var(--border2)}
+/* ─── RANGE SLIDER ─── */
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:2px;background:var(--bg4);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,var(--v2),var(--v));cursor:pointer;box-shadow:0 0 8px rgba(124,92,252,.5)}
+input[type=range]::-webkit-slider-runnable-track{border-radius:2px}
 </style>
 </head>
 <body>
@@ -248,52 +341,59 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);hei
   <div class="logo">
     <div class="logo-orb">J</div>
     <div>
-      <div class="logo-text">Campus JARVIS</div>
-      <div class="logo-sub">Student AI Platform</div>
+      <div class="logo-t">Campus JARVIS</div>
+      <div class="logo-s">Student AI Platform</div>
     </div>
   </div>
   <nav class="nav">
-    <div class="nav-section">Main</div>
-    <div class="nav-item active" onclick="goPage('dashboard',this)">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg>
+    <div class="nav-sec">Main</div>
+    <div class="ni active" onclick="goPage('dashboard',this)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg>
       Dashboard
     </div>
-    <div class="nav-item" onclick="goPage('chat',this)">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 10a2 2 0 01-2 2H5l-3 3V4a2 2 0 012-2h8a2 2 0 012 2v6z"/></svg>
-      Ask JARVIS
-      <span class="nav-badge">AI</span>
+    <div class="ni" onclick="goPage('chat',this)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 10a2 2 0 01-2 2H5l-3 3V4a2 2 0 012-2h8a2 2 0 012 2v6z"/></svg>
+      Ask JARVIS <span class="nb">AI</span>
     </div>
-    <div class="nav-section">Life</div>
-    <div class="nav-item" onclick="goPage('sleep',this)">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13.5 10A6 6 0 116 2.5a4.5 4.5 0 007.5 7.5z"/></svg>
+    <div class="nav-sec">Life</div>
+    <div class="ni" onclick="goPage('todo',this)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M2 8h8M2 12h5"/><circle cx="13" cy="12" r="2"/><path d="M13 10v-1"/></svg>
+      To-Do Board <span class="nb a" id="todo-badge">0</span>
+    </div>
+    <div class="ni" onclick="goPage('sleep',this)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13.5 10A6 6 0 116 2.5a4.5 4.5 0 007.5 7.5z"/></svg>
       Sleep AI
     </div>
-    <div class="nav-item" onclick="goPage('payments',this)">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="14" height="9" rx="1.5"/><path d="M1 7h14"/><path d="M4 10.5h2"/></svg>
-      Payments
-      <span class="nav-badge">2</span>
+    <div class="ni" onclick="goPage('alarm',this)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="9" r="6"/><path d="M8 6v3l2 1M3 2l-2 2M13 2l2 2"/></svg>
+      Alarms
     </div>
-    <div class="nav-item" onclick="goPage('hostel',this)">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 15V7l6-5 6 5v8"/><path d="M6 15v-4h4v4"/></svg>
+    <div class="ni" onclick="goPage('payments',this)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="14" height="9" rx="1.5"/><path d="M1 7h14M4 10.5h2"/></svg>
+      Payments <span class="nb" id="pay-badge">2</span>
+    </div>
+    <div class="ni" onclick="goPage('hostel',this)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 15V7l6-5 6 5v8"/><path d="M6 15v-4h4v4"/></svg>
       Hostel
     </div>
-    <div class="nav-section">Academics</div>
-    <div class="nav-item" onclick="goPage('exams',this)">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 1h8l2 3v10a1 1 0 01-1 1H3a1 1 0 01-1-1V4z"/><path d="M9 1v3h4"/><path d="M5 8h6M5 11h4"/></svg>
+    <div class="nav-sec">Academics</div>
+    <div class="ni" onclick="goPage('exams',this)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 1h8l2 3v10a1 1 0 01-1 1H3a1 1 0 01-1-1V4z"/><path d="M9 1v3h4M5 8h6M5 11h4"/></svg>
       Exam Prep
     </div>
-    <div class="nav-item" onclick="goPage('skills',this)">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="7"/><path d="M8 4v4l3 2"/></svg>
+    <div class="ni" onclick="goPage('skills',this)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 13V7M6 13V4M9 13V6M12 13V2"/></svg>
       Skills
     </div>
   </nav>
-  <div class="sidebar-bottom">
-    <div class="student-card">
-      <div class="avatar">AK</div>
-      <div class="student-info">
-        <div class="student-name">Aryan Kumar</div>
-        <div class="student-college">IIT Delhi · CS 3rd yr</div>
+  <div class="sb-bot">
+    <div class="sc" onclick="openProfileModal()">
+      <div class="av" id="sb-av">AK</div>
+      <div style="flex:1;min-width:0">
+        <div class="s-nm" id="sb-nm">Aryan Kumar</div>
+        <div class="s-cl" id="sb-cl">ABESEC · CS 2nd yr</div>
       </div>
+      <button class="ep-btn">✎</button>
     </div>
   </div>
 </aside>
@@ -301,548 +401,1138 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);hei
 <!-- MAIN -->
 <main class="main">
   <div class="topbar">
-    <div class="topbar-title" id="page-title">Good morning, Aryan 👋</div>
-    <div class="topbar-status">
-      <div class="status-dot"></div>
-      JARVIS Online
-    </div>
-    <button class="topbar-btn" title="Notifications">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1a5 5 0 015 5v3l1.5 2H1.5L3 9V6a5 5 0 015-5z"/><path d="M6.5 13.5a1.5 1.5 0 003 0"/></svg>
-    </button>
-    <button class="topbar-btn" title="Settings">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.42 1.42M11.53 11.53l1.42 1.42M3.05 12.95l1.42-1.42M11.53 4.47l1.42-1.42"/></svg>
+    <div class="tb-title" id="page-title">Dashboard</div>
+    <div class="tb-online"><div class="dot"></div>JARVIS Online</div>
+    <button class="tb-btn" onclick="openSettingsModal()" title="Settings">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.42 1.42M11.53 11.53l1.42 1.42M3.05 12.95l1.42-1.42M11.53 4.47l1.42-1.42"/></svg>
     </button>
   </div>
+
   <div class="content">
 
-    <!-- DASHBOARD -->
+    <!-- ═══════ DASHBOARD ═══════ -->
     <div class="page active" id="pg-dashboard">
-      <div class="greeting">
-        <div class="greeting-time" id="greeting-time">Monday, April 17 · 9:24 AM</div>
-        <div class="greeting-title">Good morning, <span>Aryan.</span></div>
-        <div class="greeting-sub">You have 3 tasks pending · Algorithms exam in 12 days · Sleep score: 82%</div>
+      <div style="margin-bottom:24px">
+        <div class="g-time" id="g-time">Loading…</div>
+        <div class="g-title">Welcome back, <em id="g-name">Aryan.</em></div>
+        <div class="g-sub" id="g-sub">Loading your overview…</div>
       </div>
-
-      <div class="jarvis-banner">
-        <div class="jarvis-orb-sm">🤖</div>
-        <div class="jarvis-msg">
-          <div class="jarvis-msg-label">JARVIS says</div>
-          <div class="jarvis-msg-text">You slept 7.5 hours last night — solid. Your next deadline is the OS assignment due Friday. You have 2 free hours before your 11 AM lecture — perfect for Data Structures practice. Want me to generate 10 MCQs on Trees?</div>
-        </div>
+      <div class="jb">
+        <div class="jorb">🤖</div>
+        <div style="flex:1"><div class="jlbl">JARVIS says</div><div class="jtxt" id="dash-jarvis"><div class="jld"><span></span><span></span><span></span></div></div></div>
       </div>
-
-      <div class="stats-grid">
-        <div class="stat-card purple">
-          <div class="stat-label">Sleep last night</div>
-          <div class="stat-value">7.5h</div>
-          <div class="stat-sub">Target: 8h · Score 82%</div>
-          <div class="stat-icon">🌙</div>
-        </div>
-        <div class="stat-card teal">
-          <div class="stat-label">Streak</div>
-          <div class="stat-value">14d</div>
-          <div class="stat-sub">Longest: 21 days</div>
-          <div class="stat-icon">🔥</div>
-        </div>
-        <div class="stat-card coral">
-          <div class="stat-label">Fees due</div>
-          <div class="stat-value">₹12k</div>
-          <div class="stat-sub">Due in 8 days</div>
-          <div class="stat-icon">💳</div>
-        </div>
-        <div class="stat-card amber">
-          <div class="stat-label">Exams ahead</div>
-          <div class="stat-value">3</div>
-          <div class="stat-sub">Next: OS · 12 days</div>
-          <div class="stat-icon">📚</div>
-        </div>
+      <div class="g4">
+        <div class="stat" style="border-color:rgba(124,92,252,.18)"><div class="stat-bar" style="background:linear-gradient(90deg,var(--v),transparent)"></div><div class="stat-lbl">Sleep last night</div><div class="stat-val" id="ds-sleep">–</div><div class="stat-sub">Target: 8h</div><div class="stat-ico">🌙</div></div>
+        <div class="stat" style="border-color:rgba(0,212,170,.15)"><div class="stat-bar" style="background:linear-gradient(90deg,var(--cy),transparent)"></div><div class="stat-lbl">Habit streak</div><div class="stat-val" id="ds-streak">–</div><div class="stat-sub" id="ds-streak-sub">Keep it up!</div><div class="stat-ico">🔥</div></div>
+        <div class="stat" style="border-color:rgba(255,77,141,.15)"><div class="stat-bar" style="background:linear-gradient(90deg,var(--pk),transparent)"></div><div class="stat-lbl">Fees due</div><div class="stat-val" id="ds-fees">–</div><div class="stat-sub" id="ds-fees-sub">–</div><div class="stat-ico">💳</div></div>
+        <div class="stat" style="border-color:rgba(255,181,71,.15)"><div class="stat-bar" style="background:linear-gradient(90deg,var(--am),transparent)"></div><div class="stat-lbl">Exams ahead</div><div class="stat-val" id="ds-exams">–</div><div class="stat-sub" id="ds-exams-sub">–</div><div class="stat-ico">📚</div></div>
       </div>
-
-      <div class="grid-2">
+      <div class="g2">
         <div class="card">
-          <div class="section-title">Today's tasks <span class="section-link" onclick="goPage('exams',document.querySelector('.nav-item:nth-child(8)'))">+ Add</span></div>
-          <div class="task-item">
-            <div class="task-check" onclick="toggleTask(this)"></div>
-            <div class="task-text">Complete OS Assignment — Chapter 5</div>
-            <span class="task-tag tag-coral">Due Fri</span>
-          </div>
-          <div class="task-item">
-            <div class="task-check done" onclick="toggleTask(this)">✓</div>
-            <div class="task-text done">Morning run — 30 minutes</div>
-            <span class="task-tag tag-teal">Done</span>
-          </div>
-          <div class="task-item">
-            <div class="task-check" onclick="toggleTask(this)"></div>
-            <div class="task-text">Study DSA — Binary Trees (2 hrs)</div>
-            <span class="task-tag tag-purple">High</span>
-          </div>
-          <div class="task-item">
-            <div class="task-check" onclick="toggleTask(this)"></div>
-            <div class="task-text">Pay hostel fee before deadline</div>
-            <span class="task-tag tag-coral">Urgent</span>
-          </div>
-          <div class="task-item">
-            <div class="task-check" onclick="toggleTask(this)"></div>
-            <div class="task-text">Log meals in diet tracker</div>
-            <span class="task-tag tag-amber">Daily</span>
+          <div class="sec-hd"><div class="sec-t">Today's tasks</div><span class="sec-a" onclick="goPage('todo',document.querySelectorAll('.ni')[2])">View all</span></div>
+          <div id="dash-tasks-preview"></div>
+          <div class="add-row" style="margin-top:10px">
+            <input class="ai-inp" id="quick-task-inp" placeholder="Quick add task…" onkeydown="if(event.key==='Enter')quickAddTask()">
+            <button class="ai-btn" onclick="quickAddTask()">Add</button>
           </div>
         </div>
-
         <div class="card">
-          <div class="section-title">Exam readiness</div>
-          <div class="progress-item">
-            <div class="progress-top"><div class="progress-label">Operating Systems</div><div class="progress-pct">68%</div></div>
-            <div class="progress-bar"><div class="progress-fill fill-coral" style="width:68%"></div></div>
-          </div>
-          <div class="progress-item">
-            <div class="progress-top"><div class="progress-label">Data Structures</div><div class="progress-pct">82%</div></div>
-            <div class="progress-bar"><div class="progress-fill fill-purple" style="width:82%"></div></div>
-          </div>
-          <div class="progress-item">
-            <div class="progress-top"><div class="progress-label">Algorithms</div><div class="progress-pct">54%</div></div>
-            <div class="progress-bar"><div class="progress-fill fill-amber" style="width:54%"></div></div>
-          </div>
-          <div class="progress-item">
-            <div class="progress-top"><div class="progress-label">Computer Networks</div><div class="progress-pct">91%</div></div>
-            <div class="progress-bar"><div class="progress-fill fill-teal" style="width:91%"></div></div>
-          </div>
-          <div class="divider"></div>
-          <div class="section-title" style="margin-bottom:10px">This week's habits</div>
-          <div class="progress-item">
-            <div class="progress-top"><div class="progress-label">Study sessions</div><div class="progress-pct">5/7</div></div>
-            <div class="progress-bar"><div class="progress-fill fill-blue" style="width:71%"></div></div>
-          </div>
-          <div class="progress-item">
-            <div class="progress-top"><div class="progress-label">Sleep on time</div><div class="progress-pct">6/7</div></div>
-            <div class="progress-bar"><div class="progress-fill fill-purple" style="width:86%"></div></div>
-          </div>
+          <div class="sec-hd"><div class="sec-t">Exam readiness</div><span class="sec-a" onclick="goPage('exams',document.querySelectorAll('.ni')[9])">Edit</span></div>
+          <div id="dash-readiness"></div>
         </div>
       </div>
-
-      <div class="grid-3">
+      <div class="g3">
         <div class="card-sm">
-          <div class="section-title" style="font-size:12px">Sleep this week</div>
-          <div class="sleep-display">
-            <div class="sleep-ring">
-              <svg width="100" height="100" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="10"/>
-                <circle cx="50" cy="50" r="42" fill="none" stroke="url(#sg)" stroke-width="10" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="52"/>
-                <defs><linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#5a50c8"/><stop offset="100%" stop-color="#1db87a"/></linearGradient></defs>
-              </svg>
-              <div class="sleep-ring-label"><div class="sleep-ring-hrs">7.5</div><div class="sleep-ring-sub">HRS AVG</div></div>
+          <div class="sec-t" style="font-size:12px;margin-bottom:12px">Sleep overview</div>
+          <div style="display:flex;align-items:center;gap:14px">
+            <div class="sleep-ring-wrap" style="width:90px;height:90px">
+              <svg width="90" height="90" viewBox="0 0 90 90"><circle cx="45" cy="45" r="37" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8"/><circle cx="45" cy="45" r="37" fill="none" stroke="url(#sg)" stroke-width="8" stroke-linecap="round" stroke-dasharray="232" stroke-dashoffset="46"/><defs><linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#6344e0"/><stop offset="100%" stop-color="#00d4aa"/></linearGradient></defs></svg>
+              <div class="ring-lbl"><div class="ring-hrs" id="dash-ring-avg">7.5</div><div class="ring-sub">HRS AVG</div></div>
             </div>
-          </div>
-          <div class="flex gap-2 mt-4">
-            <button class="btn btn-secondary" style="flex:1;font-size:11px" onclick="goPage('sleep',document.querySelectorAll('.nav-item')[3])">View sleep AI</button>
+            <div style="flex:1">
+              <div style="font-size:22px;font-weight:800;color:var(--cy);font-family:'JetBrains Mono',monospace" id="dash-ring-score">82%</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:2px">Sleep score</div>
+              <button class="btn btn-s" style="width:100%;margin-top:10px;font-size:11px" onclick="goPage('sleep',document.querySelectorAll('.ni')[4])">Details →</button>
+            </div>
           </div>
         </div>
-
         <div class="card-sm">
-          <div class="section-title" style="font-size:12px">Payments</div>
-          <div class="payment-item" style="padding:8px 0">
-            <div class="pay-icon" style="background:rgba(240,97,74,.1)">💳</div>
-            <div class="pay-info">
-              <div class="pay-name">Hostel Fee</div>
-              <div class="pay-date">Due Apr 25</div>
-            </div>
-            <div><div class="pay-amount pay-due">₹8,500</div><div class="pay-status status-due">Due</div></div>
-          </div>
-          <div class="payment-item" style="padding:8px 0">
-            <div class="pay-icon" style="background:rgba(240,97,74,.1)">📚</div>
-            <div class="pay-info">
-              <div class="pay-name">Semester Fee</div>
-              <div class="pay-date">Due Apr 30</div>
-            </div>
-            <div><div class="pay-amount pay-due">₹3,500</div><div class="pay-status status-due">Due</div></div>
-          </div>
-          <button class="btn btn-primary" style="width:100%;margin-top:10px;font-size:11px" onclick="goPage('payments',document.querySelectorAll('.nav-item')[4])">Pay now</button>
+          <div class="sec-t" style="font-size:12px;margin-bottom:10px">Upcoming payments</div>
+          <div id="dash-payments"></div>
+          <button class="btn btn-p" style="width:100%;margin-top:10px;font-size:11px" onclick="goPage('payments',document.querySelectorAll('.ni')[6])">Manage →</button>
         </div>
-
         <div class="card-sm">
-          <div class="section-title" style="font-size:12px">Quick actions</div>
-          <div style="display:flex;flex-direction:column;gap:7px">
-            <button class="btn btn-secondary" style="width:100%;text-align:left;font-size:12px" onclick="goPage('chat',document.querySelectorAll('.nav-item')[1])">🤖 Ask JARVIS anything</button>
-            <button class="btn btn-secondary" style="width:100%;text-align:left;font-size:12px" onclick="goPage('exams',document.querySelectorAll('.nav-item')[7])">📝 Generate mock test</button>
-            <button class="btn btn-secondary" style="width:100%;text-align:left;font-size:12px" onclick="goPage('sleep',document.querySelectorAll('.nav-item')[3])">🌙 Set smart alarm</button>
-            <button class="btn btn-secondary" style="width:100%;text-align:left;font-size:12px" onclick="goPage('skills',document.querySelectorAll('.nav-item')[8])">💡 View skills roadmap</button>
+          <div class="sec-t" style="font-size:12px;margin-bottom:10px">Quick launch</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button class="btn btn-s" style="width:100%;text-align:left;font-size:12px" onclick="goPage('chat',document.querySelectorAll('.ni')[1])">🤖 Ask JARVIS anything</button>
+            <button class="btn btn-s" style="width:100%;text-align:left;font-size:12px" onclick="goPage('todo',document.querySelectorAll('.ni')[2])">✅ Open task board</button>
+            <button class="btn btn-s" style="width:100%;text-align:left;font-size:12px" onclick="goPage('alarm',document.querySelectorAll('.ni')[5])">⏰ Set alarm</button>
+            <button class="btn btn-s" style="width:100%;text-align:left;font-size:12px" onclick="quickMsg('What should I focus on right now?')">⚡ What to do now</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- JARVIS CHAT -->
+    <!-- ═══════ CHAT ═══════ -->
     <div class="page" id="pg-chat">
       <div class="chat-wrap">
-        <div class="chat-messages" id="chat-msgs">
-          <div class="msg-row">
-            <div class="msg-avatar av-j">J</div>
-            <div class="msg-bubble bubble-j">
-              Hey Aryan! 👋 I'm JARVIS, your personal AI.<br><br>
-              I know your schedule, exams, sleep, payments and habits. Ask me anything — study plans, career advice, what to do right now, or just talk. I'm here 24/7.
-            </div>
-          </div>
+        <div class="chat-msgs" id="chat-msgs">
+          <div class="msg-row"><div class="msg-av av-j">J</div><div class="msg-bub bub-j">Hey <strong id="chat-hi-name">Aryan</strong>! 👋 I'm JARVIS, your personal campus AI.<br><br>I know your exams, sleep, payments, and habits. Ask me anything — study plans, career advice, or just talk. I'm here 24/7.</div></div>
         </div>
-        <div class="quick-chips">
-          <div class="qchip" onclick="quickMsg('Make me a 10-day study plan for my OS exam')">📚 OS study plan</div>
-          <div class="qchip" onclick="quickMsg('What should I do right now to be productive?')">⚡ What to do now</div>
-          <div class="qchip" onclick="quickMsg('Give me 5 MCQs on Binary Trees for my DSA exam')">🧪 DSA mock test</div>
-          <div class="qchip" onclick="quickMsg('I am feeling stressed about exams. Help me.')">😟 Feeling stressed</div>
-          <div class="qchip" onclick="quickMsg('What tech skills should I learn for a software job?')">💡 Career skills</div>
-          <div class="qchip" onclick="quickMsg('How do I build good study habits as a hostel student?')">🏠 Hostel tips</div>
+        <div class="chips">
+          <div class="chip" onclick="quickMsg('Make me a study plan for my weakest exam')">📚 Study plan</div>
+          <div class="chip" onclick="quickMsg('What should I do right now to be productive?')">⚡ Be productive</div>
+          <div class="chip" onclick="quickMsg('Give me 5 MCQs for my upcoming exam')">🧪 Mock test</div>
+          <div class="chip" onclick="quickMsg('I am feeling stressed about exams, help me')">😟 Stressed</div>
+          <div class="chip" onclick="quickMsg('What tech skills should I learn for a software job?')">💡 Career skills</div>
         </div>
-        <div class="chat-input-row">
-          <div class="chat-input-wrap">
-            <textarea id="chat-input" placeholder="Ask JARVIS anything..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-          </div>
-          <button class="send-btn" id="send-btn" onclick="sendChat()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
-          </button>
+        <div class="ci-row">
+          <div class="ci-wrap"><textarea id="ci" placeholder="Ask JARVIS anything…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea></div>
+          <button class="send-btn" id="send-btn" onclick="sendChat()"><svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg></button>
         </div>
       </div>
     </div>
 
-    <!-- SLEEP AI -->
+    <!-- ═══════ TO-DO BOARD ═══════ -->
+    <div class="page" id="pg-todo">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <div>
+          <div class="g-title" style="font-size:22px;margin-bottom:4px">To-Do Board</div>
+          <div class="g-sub" style="font-size:12px" id="todo-summary">Loading…</div>
+        </div>
+        <button class="btn btn-p" onclick="openAddTodoModal()">+ New task</button>
+      </div>
+      <div class="kanban-wrap" id="kanban"></div>
+    </div>
+
+    <!-- ═══════ SLEEP ═══════ -->
     <div class="page" id="pg-sleep">
-      <div class="greeting-title" style="font-size:20px;margin-bottom:20px">Sleep AI <span style="font-size:14px;color:var(--text2);font-family:'DM Sans',sans-serif;font-weight:400">— smart sleep cycle tracker</span></div>
-      <div class="grid-2" style="margin-bottom:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <div class="g-title" style="font-size:22px;margin-bottom:0">Sleep AI <span style="font-size:13px;color:var(--text2);font-weight:400;font-style:normal">— smart tracker</span></div>
+        <button class="btn btn-s" onclick="openEditSleepModal()">✎ Edit sleep data</button>
+      </div>
+      <div class="g2" style="margin-bottom:14px">
         <div class="card">
-          <div class="section-title">Smart alarm calculator</div>
-          <div style="margin-bottom:14px">
-            <div style="font-size:12px;color:var(--text3);margin-bottom:6px">I want to wake up at</div>
-            <input type="time" id="wake-time" value="07:00" style="background:var(--bg3);border:1px solid var(--border2);border-radius:9px;padding:10px 14px;color:var(--text);font-size:16px;font-family:'Syne',sans-serif;font-weight:700;width:100%;outline:none" onchange="calcBedtime()">
+          <div class="sec-hd"><div class="sec-t">This week's sleep</div></div>
+          <div id="sleep-week-bars"></div>
+          <div class="divider"></div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+            <div class="sleep-stat-box"><div class="ssb-val" id="sl-avg" style="color:var(--v)">7.5h</div><div class="ssb-lbl">Avg</div></div>
+            <div class="sleep-stat-box"><div class="ssb-val" id="sl-score" style="color:var(--cy)">82%</div><div class="ssb-lbl">Score</div></div>
+            <div class="sleep-stat-box"><div class="ssb-val" id="sl-best" style="color:var(--am)">9h</div><div class="ssb-lbl">Best</div></div>
+            <div class="sleep-stat-box"><div class="ssb-val" id="sl-debt" style="color:var(--pk)">-0.5h</div><div class="ssb-lbl">Debt</div></div>
           </div>
-          <div style="background:var(--bg3);border-radius:var(--r);padding:14px;border:1px solid var(--border)" id="bedtime-results">
-            <div style="font-size:11px;color:var(--text3);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em">JARVIS recommends sleeping at</div>
-            <div id="bedtime-options"></div>
-            <div style="font-size:11px;color:var(--text3);margin-top:10px;line-height:1.6">Each cycle = 90 minutes. You'll wake up between sleep cycles feeling refreshed — not groggy.</div>
-          </div>
-          <button class="btn btn-primary" style="width:100%;margin-top:12px" onclick="setAlarm()">Set smart alarm 🔔</button>
         </div>
         <div class="card">
-          <div class="section-title">This week's sleep</div>
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <div id="sleep-week"></div>
-          </div>
-          <div class="divider"></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-            <div style="background:var(--bg3);border-radius:var(--r);padding:12px;text-align:center"><div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--purple)">7.5h</div><div style="font-size:11px;color:var(--text3);margin-top:3px">Avg this week</div></div>
-            <div style="background:var(--bg3);border-radius:var(--r);padding:12px;text-align:center"><div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--teal)">82%</div><div style="font-size:11px;color:var(--text3);margin-top:3px">Sleep score</div></div>
-            <div style="background:var(--bg3);border-radius:var(--r);padding:12px;text-align:center"><div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--amber)">5</div><div style="font-size:11px;color:var(--text3);margin-top:3px">Days on target</div></div>
-            <div style="background:var(--bg3);border-radius:var(--r);padding:12px;text-align:center"><div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--coral)">-0.5h</div><div style="font-size:11px;color:var(--text3);margin-top:3px">Sleep debt</div></div>
+          <div class="sec-hd"><div class="sec-t">Sleep ring</div></div>
+          <div style="display:flex;align-items:center;gap:20px;padding:8px 0">
+            <div class="sleep-ring-wrap">
+              <svg width="110" height="110" viewBox="0 0 110 110"><circle cx="55" cy="55" r="46" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="10"/><circle cx="55" cy="55" r="46" fill="none" stroke="url(#sg2)" stroke-width="10" stroke-linecap="round" stroke-dasharray="289" id="sleep-ring-arc" stroke-dashoffset="58"/><defs><linearGradient id="sg2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#6344e0"/><stop offset="100%" stop-color="#00d4aa"/></linearGradient></defs></svg>
+              <div class="ring-lbl"><div class="ring-hrs" id="ring-avg2">7.5</div><div class="ring-sub">HRS/NIGHT</div></div>
+            </div>
+            <div style="flex:1">
+              <div style="margin-bottom:12px"><div style="font-size:11px;color:var(--text3);margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em">Sleep score</div><div style="font-weight:800;font-size:28px;color:var(--cy);font-family:'JetBrains Mono',monospace" id="ring-score2">82%</div></div>
+              <div style="margin-bottom:12px"><div style="font-size:11px;color:var(--text3);margin-bottom:3px">Debt</div><div style="font-weight:700;font-size:16px;color:var(--pk);font-family:'JetBrains Mono',monospace" id="ring-debt">-0.5h</div></div>
+              <button class="btn btn-s" style="width:100%;font-size:11px" onclick="goPage('alarm',document.querySelectorAll('.ni')[5])">Set alarm →</button>
+            </div>
           </div>
         </div>
       </div>
       <div class="card">
-        <div class="section-title">JARVIS sleep insight</div>
-        <div class="jarvis-banner" style="margin-bottom:0">
-          <div class="jarvis-orb-sm">🌙</div>
-          <div class="jarvis-msg">
-            <div class="jarvis-msg-label">JARVIS sleep AI</div>
-            <div class="jarvis-msg-text">Your sleep this week is good — 7.5 hour average. However, Wednesday you only got 5.5 hours before your Thursday lab. I've noticed your best study performance happens after nights with 7–8 hours. Tonight before your exam prep: sleep by 11 PM for a full 8 hours. I'll set your alarm for 7 AM (5 complete cycles).</div>
-          </div>
+        <div class="sec-hd"><div class="sec-t">JARVIS sleep insight</div></div>
+        <div class="jb" style="margin-bottom:0">
+          <div class="jorb">🌙</div>
+          <div style="flex:1"><div class="jlbl">JARVIS sleep AI</div><div class="jtxt" id="sleep-jarvis"><div class="jld"><span></span><span></span><span></span></div></div></div>
         </div>
       </div>
     </div>
 
-    <!-- PAYMENTS -->
+    <!-- ═══════ ALARM ═══════ -->
+    <div class="page" id="pg-alarm">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <div class="g-title" style="font-size:22px;margin-bottom:0">Alarms</div>
+        <button class="btn btn-p" onclick="openAddAlarmModal()">+ Add alarm</button>
+      </div>
+      <div class="g2" style="margin-bottom:14px">
+        <div class="card">
+          <div class="sec-hd"><div class="sec-t">My alarms</div><span class="sec-a" onclick="openAddAlarmModal()">+ Add</span></div>
+          <div id="alarm-list"></div>
+        </div>
+        <div class="card">
+          <div class="sec-hd"><div class="sec-t">Smart bedtime calculator</div></div>
+          <div style="margin-bottom:16px">
+            <div style="font-size:11.5px;color:var(--text3);margin-bottom:8px">I want to wake up at</div>
+            <input type="time" id="wake-time" value="07:00" style="background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;color:var(--text);font-size:18px;font-family:'JetBrains Mono',monospace;font-weight:700;width:100%;outline:none;transition:border-color .15s" onchange="calcBedtime()">
+          </div>
+          <div style="background:var(--bg3);border-radius:var(--r);padding:14px;border:1px solid var(--border)">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">JARVIS recommends sleeping at</div>
+            <div id="bedtime-opts"></div>
+            <div style="font-size:11px;color:var(--text3);margin-top:10px;line-height:1.7">Each sleep cycle ≈ 90 min. Wake between cycles to feel refreshed — not groggy.</div>
+          </div>
+          <button class="btn btn-p" style="width:100%;margin-top:12px" onclick="addBedtimeAlarm()">⏰ Add as alarm</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ PAYMENTS ═══════ -->
     <div class="page" id="pg-payments">
-      <div class="greeting-title" style="font-size:20px;margin-bottom:20px">Payments <span style="font-size:14px;color:var(--text2);font-family:'DM Sans',sans-serif;font-weight:400">— all fees tracked</span></div>
-      <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
-        <div class="stat-card coral"><div class="stat-label">Amount due</div><div class="stat-value">₹12,000</div><div class="stat-sub">2 payments pending</div></div>
-        <div class="stat-card teal"><div class="stat-label">Paid this semester</div><div class="stat-value">₹54,000</div><div class="stat-sub">4 payments cleared</div></div>
-        <div class="stat-card amber"><div class="stat-label">Next due date</div><div class="stat-value">Apr 25</div><div class="stat-sub">8 days remaining</div></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <div class="g-title" style="font-size:22px;margin-bottom:0">Payments</div>
+        <button class="btn btn-p" onclick="openAddPaymentModal()">+ Add payment</button>
       </div>
-      <div class="grid-2">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px">
+        <div class="stat" style="border-color:rgba(255,77,141,.15)"><div class="stat-bar" style="background:linear-gradient(90deg,var(--pk),transparent)"></div><div class="stat-lbl">Total due</div><div class="stat-val" id="pay-total-due">₹0</div><div class="stat-sub" id="pay-due-count">0 pending</div><div class="stat-ico">💸</div></div>
+        <div class="stat" style="border-color:rgba(0,212,170,.15)"><div class="stat-bar" style="background:linear-gradient(90deg,var(--cy),transparent)"></div><div class="stat-lbl">Paid this semester</div><div class="stat-val" id="pay-total-paid">₹0</div><div class="stat-sub" id="pay-paid-count">0 cleared</div><div class="stat-ico">✅</div></div>
+        <div class="stat" style="border-color:rgba(255,181,71,.15)"><div class="stat-bar" style="background:linear-gradient(90deg,var(--am),transparent)"></div><div class="stat-lbl">Next due date</div><div class="stat-val" id="pay-next-date">–</div><div class="stat-sub" id="pay-next-days">–</div><div class="stat-ico">📅</div></div>
+      </div>
+      <div class="g2">
         <div class="card">
-          <div class="section-title">Pending payments</div>
-          <div class="payment-item">
-            <div class="pay-icon" style="background:rgba(240,97,74,.12);font-size:20px">🏠</div>
-            <div class="pay-info"><div class="pay-name">Hostel Semester Fee</div><div class="pay-date">Due April 25, 2025</div></div>
-            <div style="text-align:right"><div class="pay-amount pay-due">₹8,500</div><div class="pay-status status-due">Due</div></div>
-          </div>
-          <div class="payment-item">
-            <div class="pay-icon" style="background:rgba(240,97,74,.12);font-size:20px">📘</div>
-            <div class="pay-info"><div class="pay-name">Semester Tuition Fee</div><div class="pay-date">Due April 30, 2025</div></div>
-            <div style="text-align:right"><div class="pay-amount pay-due">₹3,500</div><div class="pay-status status-due">Due</div></div>
-          </div>
-          <button class="btn btn-primary" style="width:100%;margin-top:12px">Pay ₹12,000 via Razorpay 🔒</button>
+          <div class="sec-hd"><div class="sec-t">Pending payments</div></div>
+          <div id="pay-pending-list"><div style="color:var(--text3);font-size:12px;padding:12px 0">No pending payments 🎉</div></div>
+          <button class="btn btn-p" style="width:100%;margin-top:14px" id="pay-now-btn" onclick="showToast('🔒','Payment gateway','Razorpay integration would go here')">Pay all via Razorpay 🔒</button>
         </div>
         <div class="card">
-          <div class="section-title">Payment history</div>
-          <div class="payment-item">
-            <div class="pay-icon" style="background:rgba(29,184,122,.1);font-size:20px">🍽️</div>
-            <div class="pay-info"><div class="pay-name">Mess Fee — March</div><div class="pay-date">Paid Mar 28, 2025</div></div>
-            <div style="text-align:right"><div class="pay-amount pay-paid">₹3,200</div><div class="pay-status status-paid">Paid</div></div>
-          </div>
-          <div class="payment-item">
-            <div class="pay-icon" style="background:rgba(29,184,122,.1);font-size:20px">📘</div>
-            <div class="pay-info"><div class="pay-name">Semester Fee — Sem 5</div><div class="pay-date">Paid Jan 10, 2025</div></div>
-            <div style="text-align:right"><div class="pay-amount pay-paid">₹42,000</div><div class="pay-status status-paid">Paid</div></div>
-          </div>
-          <div class="payment-item">
-            <div class="pay-icon" style="background:rgba(29,184,122,.1);font-size:20px">🏠</div>
-            <div class="pay-info"><div class="pay-name">Hostel — Sem 5</div><div class="pay-date">Paid Jan 5, 2025</div></div>
-            <div style="text-align:right"><div class="pay-amount pay-paid">₹8,800</div><div class="pay-status status-paid">Paid</div></div>
-          </div>
-          <button class="btn btn-secondary" style="width:100%;margin-top:12px">Download all receipts PDF</button>
+          <div class="sec-hd"><div class="sec-t">Payment history</div><span class="sec-a" onclick="openAddPaymentModal()">+ Add</span></div>
+          <div id="pay-history-list"><div style="color:var(--text3);font-size:12px;padding:12px 0">No payments recorded yet.</div></div>
         </div>
       </div>
     </div>
 
-    <!-- HOSTEL -->
+    <!-- ═══════ HOSTEL ═══════ -->
     <div class="page" id="pg-hostel">
-      <div class="greeting-title" style="font-size:20px;margin-bottom:20px">Hostel <span style="font-size:14px;color:var(--text2);font-family:'DM Sans',sans-serif;font-weight:400">— Kaveri Block · Room 4B-12</span></div>
-      <div class="grid-2">
+      <div class="g-title" style="font-size:22px;margin-bottom:20px">Hostel <span style="font-size:13px;color:var(--text2);font-weight:400">— Kaveri Block · Room 4B-12</span></div>
+      <div class="g2">
         <div class="card">
-          <div class="section-title">Room availability — 4th Floor B</div>
+          <div class="sec-hd"><div class="sec-t">Room availability — 4th Floor B</div></div>
           <div class="room-grid" id="room-grid"></div>
-          <div style="display:flex;gap:12px;font-size:11px;color:var(--text3)">
-            <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:linear-gradient(135deg,#5a50c8,#7c6fee);display:inline-block"></span>Your room</span>
-            <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:var(--bg4);display:inline-block"></span>Occupied</span>
-            <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:rgba(29,184,122,.2);display:inline-block"></span>Vacant</span>
+          <div style="display:flex;gap:14px;font-size:10.5px;color:var(--text3)">
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:9px;height:9px;border-radius:3px;background:linear-gradient(135deg,#6344e0,#7c5cfc);display:inline-block"></span>Your room</span>
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:9px;height:9px;border-radius:3px;background:var(--bg4);display:inline-block"></span>Occupied</span>
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:9px;height:9px;border-radius:3px;background:rgba(0,212,170,.2);display:inline-block"></span>Vacant</span>
           </div>
         </div>
         <div class="card">
-          <div class="section-title">Your room details</div>
-          <div class="sleep-row"><span class="sleep-key">Room</span><span class="sleep-val" style="color:var(--purple);font-weight:700">4B-12</span></div>
-          <div class="sleep-row"><span class="sleep-key">Block</span><span class="sleep-val">Kaveri Block</span></div>
-          <div class="sleep-row"><span class="sleep-key">Floor</span><span class="sleep-val">4th Floor</span></div>
-          <div class="sleep-row"><span class="sleep-key">Roommate</span><span class="sleep-val">Rohit Sharma · ECE</span></div>
-          <div class="sleep-row"><span class="sleep-key">Warden</span><span class="sleep-val">Dr. S. Mehta</span></div>
-          <div class="sleep-row"><span class="sleep-key">Mess</span><span class="sleep-val">Kaveri Mess · 200m</span></div>
+          <div class="sec-hd"><div class="sec-t">Room details</div></div>
+          <div>
+            <div class="pay-item" style="padding:9px 0"><span style="font-size:12px;color:var(--text2)">Room</span><span style="font-size:13px;font-weight:700;color:var(--v);margin-left:auto">4B-12</span></div>
+            <div class="pay-item" style="padding:9px 0"><span style="font-size:12px;color:var(--text2)">Block</span><span style="font-size:12.5px;font-weight:500;color:var(--text);margin-left:auto">Kaveri Block</span></div>
+            <div class="pay-item" style="padding:9px 0"><span style="font-size:12px;color:var(--text2)">Floor</span><span style="font-size:12.5px;font-weight:500;color:var(--text);margin-left:auto">4th Floor</span></div>
+            <div class="pay-item" style="padding:9px 0"><span style="font-size:12px;color:var(--text2)">Roommate</span><span style="font-size:12.5px;font-weight:500;color:var(--text);margin-left:auto">Rohit Sharma · ECE</span></div>
+            <div class="pay-item" style="padding:9px 0"><span style="font-size:12px;color:var(--text2)">Warden</span><span style="font-size:12.5px;font-weight:500;color:var(--text);margin-left:auto">Dr. S. Mehta</span></div>
+            <div class="pay-item" style="padding:9px 0;border-bottom:none"><span style="font-size:12px;color:var(--text2)">Mess</span><span style="font-size:12.5px;font-weight:500;color:var(--text);margin-left:auto">Kaveri Mess · 200m</span></div>
+          </div>
           <div class="divider"></div>
-          <button class="btn btn-secondary" style="width:100%;margin-bottom:8px">Submit maintenance request</button>
-          <button class="btn btn-secondary" style="width:100%">Apply for room change</button>
+          <button class="btn btn-s" style="width:100%;margin-bottom:8px">Submit maintenance request</button>
+          <button class="btn btn-s" style="width:100%">Apply for room change</button>
         </div>
       </div>
     </div>
 
-    <!-- EXAMS -->
+    <!-- ═══════ EXAMS ═══════ -->
     <div class="page" id="pg-exams">
-      <div class="greeting-title" style="font-size:20px;margin-bottom:20px">Exam Prep AI <span style="font-size:14px;color:var(--text2);font-family:'DM Sans',sans-serif;font-weight:400">— your personal study coach</span></div>
-      <div class="jarvis-banner" style="margin-bottom:20px">
-        <div class="jarvis-orb-sm">📚</div>
-        <div class="jarvis-msg">
-          <div class="jarvis-msg-label">JARVIS exam AI</div>
-          <div class="jarvis-msg-text">You have 3 exams in the next 30 days. Your weakest subject is Algorithms (54%). JARVIS recommends: 2 hours on Algorithms today, then 1 hour OS. Want me to generate a topic-wise study plan?</div>
-        </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <div class="g-title" style="font-size:22px;margin-bottom:0">Exam Prep AI</div>
+        <button class="btn btn-p" onclick="openAddExamModal()">+ Add subject</button>
       </div>
-      <div class="section-title" style="margin-bottom:12px">Upcoming exams</div>
-      <div class="exam-card">
-        <div class="exam-countdown" style="background:rgba(240,97,74,.12)"><div class="cd-days" style="color:var(--coral)">12</div><div class="cd-label" style="color:var(--coral)">DAYS</div></div>
-        <div class="exam-info">
-          <div class="exam-name">Operating Systems · Mid-semester</div>
-          <div class="exam-date">April 29, 2025 · 9:00 AM · Room 301</div>
-          <div class="exam-progress-bar"><div class="exam-progress-fill fill-coral" style="width:68%"></div></div>
-        </div>
-        <div style="text-align:center"><div style="font-size:20px;font-weight:800;color:var(--text);font-family:'Syne',sans-serif">68%</div><div style="font-size:10px;color:var(--text3)">Ready</div></div>
+      <div class="jb">
+        <div class="jorb">📚</div>
+        <div style="flex:1"><div class="jlbl">JARVIS exam AI</div><div class="jtxt" id="exam-jarvis"><div class="jld"><span></span><span></span><span></span></div></div></div>
       </div>
-      <div class="exam-card">
-        <div class="exam-countdown" style="background:rgba(245,166,35,.1)"><div class="cd-days" style="color:var(--amber)">18</div><div class="cd-label" style="color:var(--amber)">DAYS</div></div>
-        <div class="exam-info">
-          <div class="exam-name">Algorithms · End semester</div>
-          <div class="exam-date">May 5, 2025 · 2:00 PM · Room 201</div>
-          <div class="exam-progress-bar"><div class="exam-progress-fill fill-amber" style="width:54%"></div></div>
-        </div>
-        <div style="text-align:center"><div style="font-size:20px;font-weight:800;color:var(--text);font-family:'Syne',sans-serif">54%</div><div style="font-size:10px;color:var(--text3)">Needs work</div></div>
+      <div class="sec-hd">
+        <div class="sec-t">Your subjects</div>
+        <span class="sec-a" onclick="openAddExamModal()">+ Add</span>
       </div>
-      <div class="exam-card">
-        <div class="exam-countdown" style="background:rgba(74,158,255,.1)"><div class="cd-days" style="color:var(--blue)">24</div><div class="cd-label" style="color:var(--blue)">DAYS</div></div>
-        <div class="exam-info">
-          <div class="exam-name">Computer Networks · End semester</div>
-          <div class="exam-date">May 11, 2025 · 9:00 AM · Room 105</div>
-          <div class="exam-progress-bar"><div class="exam-progress-fill fill-blue" style="width:91%"></div></div>
-        </div>
-        <div style="text-align:center"><div style="font-size:20px;font-weight:800;color:var(--teal);font-family:'Syne',sans-serif">91%</div><div style="font-size:10px;color:var(--text3)">Ready</div></div>
-      </div>
-      <div class="grid-2" style="margin-top:16px">
-        <button class="btn btn-primary" style="width:100%;padding:14px" onclick="goPage('chat',document.querySelectorAll('.nav-item')[1]);setTimeout(()=>quickMsg('Generate 10 MCQs on Operating Systems Process Scheduling for my upcoming exam'),300)">🧪 Generate mock test with AI</button>
-        <button class="btn btn-secondary" style="width:100%;padding:14px" onclick="goPage('chat',document.querySelectorAll('.nav-item')[1]);setTimeout(()=>quickMsg('Make me a 12-day study plan for my OS exam covering all topics'),300)">📋 Create AI study plan</button>
+      <div id="exam-cards"></div>
+      <div class="g2" style="margin-top:14px">
+        <button class="btn btn-p" style="width:100%;padding:13px" onclick="quickMsg('Generate 10 MCQs on my weakest subject')">🧪 Generate mock test</button>
+        <button class="btn btn-s" style="width:100%;padding:13px" onclick="quickMsg('Create a full study plan for all my upcoming exams')">📋 AI study plan</button>
       </div>
     </div>
 
-    <!-- SKILLS -->
+    <!-- ═══════ SKILLS ═══════ -->
     <div class="page" id="pg-skills">
-      <div class="greeting-title" style="font-size:20px;margin-bottom:20px">Skills Roadmap <span style="font-size:14px;color:var(--text2);font-family:'DM Sans',sans-serif;font-weight:400">— your growth tracker</span></div>
-      <div class="section-title">Technical skills</div>
-      <div class="grid-3">
-        <div class="skill-card">
-          <div class="skill-top"><div class="skill-ico" style="background:rgba(245,166,35,.12)">☕</div><div><div class="skill-name">Java / DSA</div><div class="skill-level">Intermediate</div></div></div>
-          <div class="progress-bar"><div class="progress-fill fill-amber" style="width:72%"></div></div>
-          <div style="font-size:10px;color:var(--text3);margin-top:5px">72% · Next: Graph algorithms</div>
-        </div>
-        <div class="skill-card">
-          <div class="skill-top"><div class="skill-ico" style="background:rgba(74,158,255,.12)">⚛️</div><div><div class="skill-name">React / Web Dev</div><div class="skill-level">Beginner</div></div></div>
-          <div class="progress-bar"><div class="progress-fill fill-blue" style="width:38%"></div></div>
-          <div style="font-size:10px;color:var(--text3);margin-top:5px">38% · Next: Hooks & state</div>
-        </div>
-        <div class="skill-card">
-          <div class="skill-top"><div class="skill-ico" style="background:rgba(124,111,238,.12)">🐍</div><div><div class="skill-name">Python / ML</div><div class="skill-level">Beginner</div></div></div>
-          <div class="progress-bar"><div class="progress-fill fill-purple" style="width:25%"></div></div>
-          <div style="font-size:10px;color:var(--text3);margin-top:5px">25% · Next: NumPy basics</div>
-        </div>
-        <div class="skill-card">
-          <div class="skill-top"><div class="skill-ico" style="background:rgba(29,184,122,.12)">🗄️</div><div><div class="skill-name">SQL / Databases</div><div class="skill-level">Intermediate</div></div></div>
-          <div class="progress-bar"><div class="progress-fill fill-teal" style="width:65%"></div></div>
-          <div style="font-size:10px;color:var(--text3);margin-top:5px">65% · Next: Indexing</div>
-        </div>
-        <div class="skill-card">
-          <div class="skill-top"><div class="skill-ico" style="background:rgba(240,97,74,.12)">🐙</div><div><div class="skill-name">Git / GitHub</div><div class="skill-level">Intermediate</div></div></div>
-          <div class="progress-bar"><div class="progress-fill fill-coral" style="width:80%"></div></div>
-          <div style="font-size:10px;color:var(--text3);margin-top:5px">80% · Next: Branching</div>
-        </div>
-        <div class="skill-card">
-          <div class="skill-top"><div class="skill-ico" style="background:rgba(74,158,255,.12)">☁️</div><div><div class="skill-name">Cloud / AWS</div><div class="skill-level">Beginner</div></div></div>
-          <div class="progress-bar"><div class="progress-fill fill-blue" style="width:15%"></div></div>
-          <div style="font-size:10px;color:var(--text3);margin-top:5px">15% · Next: EC2 basics</div>
-        </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <div class="g-title" style="font-size:22px;margin-bottom:0">Skills Roadmap</div>
+        <button class="btn btn-p" onclick="openAddSkillModal()">+ Add skill</button>
       </div>
+      <div class="sec-t" style="margin-bottom:10px">Technical skills</div>
+      <div class="g3" id="skills-grid"></div>
       <div class="divider"></div>
-      <div class="section-title">Soft skills</div>
-      <div class="grid-3">
-        <div class="skill-card">
-          <div class="skill-top"><div class="skill-ico" style="background:rgba(245,166,35,.12)">🗣️</div><div><div class="skill-name">Communication</div><div class="skill-level">Good</div></div></div>
-          <div class="progress-bar"><div class="progress-fill fill-amber" style="width:75%"></div></div>
-        </div>
-        <div class="skill-card">
-          <div class="skill-top"><div class="skill-ico" style="background:rgba(124,111,238,.12)">👥</div><div><div class="skill-name">Teamwork</div><div class="skill-level">Strong</div></div></div>
-          <div class="progress-bar"><div class="progress-fill fill-purple" style="width:85%"></div></div>
-        </div>
-        <div class="skill-card">
-          <div class="skill-top"><div class="skill-ico" style="background:rgba(29,184,122,.12)">🧩</div><div><div class="skill-name">Problem solving</div><div class="skill-level">Intermediate</div></div></div>
-          <div class="progress-bar"><div class="progress-fill fill-teal" style="width:68%"></div></div>
-        </div>
-      </div>
-      <button class="btn btn-primary" style="margin-top:8px" onclick="goPage('chat',document.querySelectorAll('.nav-item')[1]);setTimeout(()=>quickMsg('Based on my skills progress, what should I learn next to get a software engineering job?'),300)">🤖 Ask JARVIS what to learn next</button>
+      <div class="sec-t" style="margin-bottom:10px">Soft skills</div>
+      <div class="g3" id="soft-skills-grid"></div>
+      <button class="btn btn-p" style="margin-top:4px" onclick="quickMsg('Based on my skills, what should I learn next to get a software engineering internship at a top company?')">🤖 Ask JARVIS what to learn next</button>
     </div>
 
-  </div>
+  </div><!-- content -->
 </main>
 
 <script>
-const SYSTEM = `You are JARVIS, the AI assistant for Campus JARVIS — a student life management platform. You are talking to Aryan Kumar, a 3rd year Computer Science student at IIT Delhi from Lucknow, UP.
-Student context:
-- Exams upcoming: Operating Systems (12 days), Algorithms (18 days), Computer Networks (24 days)
-- OS readiness: 68%, Algorithms: 54% (weakest), Computer Networks: 91%
-- Sleep average: 7.5 hours, sleep score: 82%
-- Pending payments: Hostel fee ₹8,500 (due Apr 25), Semester fee ₹3,500 (due Apr 30)
-- Habit streak: 14 days
-- Skills: Java/DSA 72%, React 38%, Python 25%, SQL 65%, Git 80%
-Be warm, smart, and concise. Use the student's context to give personalized answers. Format nicely with short paragraphs or bullets. Keep replies under 180 words unless a detailed plan is needed.`;
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let S = {
+  name:'Aryan', lastName:'Kumar', college:'ABESEC', year:'2nd', branch:'CS',
+  sleep:{ avg:7.5, score:82, debt:-0.5, week:[7.5,8,5.5,7,8,9,7.5] },
+  streak:14,
+  todos:[
+    {id:1,title:'Complete DSA Assignment — Trees',desc:'Chapter 12 exercises',prio:'high',col:'todo',tag:'Academics',done:false},
+    {id:2,title:'Morning run — 30 minutes',desc:'Cardio + stretching',prio:'low',col:'done',tag:'Health',done:true},
+    {id:3,title:'Study OS — Process Scheduling',desc:'2 hour deep session',prio:'urgent',col:'inprogress',tag:'Academics',done:false},
+    {id:4,title:'Pay hostel fee before deadline',desc:'Due Apr 25',prio:'urgent',col:'todo',tag:'Finance',done:false},
+    {id:5,title:'React Hooks practice',desc:'useState + useEffect',prio:'medium',col:'inprogress',tag:'Skills',done:false},
+    {id:6,title:'Log meals in diet tracker',desc:'Breakfast, lunch, dinner',prio:'low',col:'todo',tag:'Health',done:false},
+  ],
+  exams:[
+    {name:'Operating Systems',type:'Mid-semester',days:12,readiness:68,color:'pink'},
+    {name:'Algorithms & DS',type:'End semester',days:18,readiness:54,color:'amber'},
+    {name:'Computer Networks',type:'End semester',days:24,readiness:91,color:'sky'},
+  ],
+  skills:[
+    {name:'Java / DSA',icon:'☕',level:'Intermediate',pct:72,next:'Graph algorithms',fill:'pa',bg:'rgba(255,181,71,.12)'},
+    {name:'React / Web Dev',icon:'⚛️',level:'Beginner',pct:38,next:'Hooks & state',fill:'ps',bg:'rgba(56,192,255,.12)'},
+    {name:'Python / ML',icon:'🐍',level:'Beginner',pct:25,next:'NumPy basics',fill:'pv',bg:'rgba(124,92,252,.12)'},
+    {name:'SQL / Databases',icon:'🗄️',level:'Intermediate',pct:65,next:'Indexing & joins',fill:'pc',bg:'rgba(0,212,170,.12)'},
+    {name:'Git / GitHub',icon:'🐙',level:'Intermediate',pct:80,next:'Advanced branching',fill:'pp',bg:'rgba(255,77,141,.12)'},
+    {name:'Cloud / AWS',icon:'☁️',level:'Beginner',pct:15,next:'EC2 basics',fill:'ps',bg:'rgba(56,192,255,.12)'},
+  ],
+  softSkills:[
+    {name:'Communication',icon:'🗣️',level:'Good',pct:75,fill:'pa',bg:'rgba(255,181,71,.12)'},
+    {name:'Teamwork',icon:'👥',level:'Strong',pct:85,fill:'pv',bg:'rgba(124,92,252,.12)'},
+    {name:'Problem Solving',icon:'🧩',level:'Intermediate',pct:68,fill:'pc',bg:'rgba(0,212,170,.12)'},
+  ],
+  alarms:[
+    {id:1,time:'07:00',label:'Morning wake-up',days:[1,2,3,4,5],on:true},
+    {id:2,time:'22:30',label:'Sleep reminder',days:[0,1,2,3,4,5,6],on:true},
+  ],
+  payments:[
+    {id:1,name:'Hostel Semester Fee',date:'Apr 25, 2025',amount:8500,status:'due',icon:'🏠'},
+    {id:2,name:'Semester Tuition Fee',date:'Apr 30, 2025',amount:3500,status:'due',icon:'📘'},
+    {id:3,name:'Mess Fee — March',date:'Mar 28, 2025',amount:3200,status:'paid',icon:'🍽️'},
+    {id:4,name:'Semester Fee — Sem 3',date:'Jan 10, 2025',amount:42000,status:'paid',icon:'📚'},
+    {id:5,name:'Hostel — Sem 3',date:'Jan 5, 2025',amount:8800,status:'paid',icon:'🏠'},
+  ],
+  nextTodoId:10
+};
 
-let history = [], busy = false;
+const EC={
+  pink: {bg:'rgba(255,77,141,.12)', text:'var(--pk)', fill:'pp', cls:'ec-pk'},
+  amber:{bg:'rgba(255,181,71,.12)', text:'var(--am)', fill:'pa', cls:'ec-am'},
+  sky:  {bg:'rgba(56,192,255,.12)', text:'var(--sky)',fill:'ps', cls:'ec-sk'},
+  teal: {bg:'rgba(0,212,170,.12)',  text:'var(--cy)', fill:'pc', cls:'ec-cy'},
+  violet:{bg:'rgba(124,92,252,.12)',text:'var(--v)',  fill:'pv', cls:'ec-v'},
+};
+EC.pink.border='rgba(255,77,141,.5)';EC.amber.border='rgba(255,181,71,.5)';EC.sky.border='rgba(56,192,255,.5)';EC.teal.border='rgba(0,212,170,.5)';EC.violet.border='rgba(124,92,252,.5)';
 
-function goPage(id, el) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('pg-' + id).classList.add('active');
-  if (el) el.classList.add('active');
-  const titles = {dashboard:'Good morning, Aryan 👋',chat:'Ask JARVIS',sleep:'Sleep AI',payments:'Payments',hostel:'Hostel',exams:'Exam Prep AI',skills:'Skills Roadmap'};
-  document.getElementById('page-title').textContent = titles[id] || 'Campus JARVIS';
+let chatHistory=[], chatBusy=false;
+
+// ─── AI CALLS ───
+async function callAI(prompt, sys, maxTok=400) {
+  const res = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:maxTok,system:sys||buildSys(),messages:[{role:'user',content:prompt}]})});
+  const d=await res.json(); return d.content?.map(b=>b.text||'').join('')||'';
+}
+function buildSys(){
+  const w=[...S.exams].sort((a,b)=>a.readiness-b.readiness)[0];
+  return `You are JARVIS, AI assistant for Campus JARVIS. Talking to ${S.name} ${S.lastName}, ${S.year} year ${S.branch} student at ${S.college}.
+Context: Exams — ${S.exams.map(e=>`${e.name} in ${e.days} days (${e.readiness}% ready)`).join(', ')}. Sleep avg: ${S.sleep.avg}h, score ${S.sleep.score}%. Streak: ${S.streak} days. Skills: ${S.skills.map(s=>`${s.name} ${s.pct}%`).join(', ')}.
+Be warm, smart, concise. Personalize answers. Format nicely with bullets if needed. Under 180 words unless detailed plan requested.`;
 }
 
-function toggleTask(el) {
-  el.classList.toggle('done');
-  el.textContent = el.classList.contains('done') ? '✓' : '';
-  const txt = el.nextElementSibling;
-  txt.classList.toggle('done');
+// ─── NAVIGATION ───
+function goPage(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  document.getElementById('pg-'+id).classList.add('active');
+  if(el) el.classList.add('active');
+  const ts={dashboard:'Dashboard',chat:'Ask JARVIS',todo:'To-Do Board',sleep:'Sleep AI',alarm:'Alarms',payments:'Payments',hostel:'Hostel',exams:'Exam Prep AI',skills:'Skills Roadmap'};
+  document.getElementById('page-title').textContent=ts[id]||'Campus JARVIS';
+  if(id==='chat') document.getElementById('ci').focus();
 }
 
-function autoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+// ─── CHAT ───
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,90)+'px'}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}}
+function addMsg(role,html){
+  const box=document.getElementById('chat-msgs');
+  const d=document.createElement('div'); d.className='msg-row'+(role==='user'?' user':'');
+  d.innerHTML=`<div class="msg-av ${role==='user'?'av-u':'av-j'}">${role==='user'?S.name[0]:'J'}</div><div class="msg-bub ${role==='user'?'bub-u':'bub-j'}">${html}</div>`;
+  box.appendChild(d); box.scrollTop=box.scrollHeight;
+}
+function showTyping(){
+  const box=document.getElementById('chat-msgs');
+  const d=document.createElement('div'); d.className='msg-row'; d.id='typ-ind';
+  d.innerHTML=`<div class="msg-av av-j">J</div><div class="typ-bub"><div class="td"></div><div class="td"></div><div class="td"></div></div>`;
+  box.appendChild(d); box.scrollTop=box.scrollHeight;
+}
+function fmt(t){
+  return t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>')
+    .replace(/^-\s(.+)$/gm,'<div style="display:flex;gap:7px;margin:3px 0"><span style="color:var(--v);flex-shrink:0">›</span><span>$1</span></div>')
+    .replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+}
+async function sendChat(){
+  if(chatBusy) return;
+  const inp=document.getElementById('ci');
+  const text=inp.value.trim(); if(!text) return;
+  inp.value=''; inp.style.height='auto';
+  document.getElementById('send-btn').disabled=true; chatBusy=true;
+  addMsg('user',text); chatHistory.push({role:'user',content:text}); showTyping();
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:buildSys(),messages:chatHistory})});
+    const data=await res.json();
+    const reply=data.content?.map(b=>b.text||'').join('')||'Sorry, try again.';
+    chatHistory.push({role:'assistant',content:reply});
+    document.getElementById('typ-ind')?.remove(); addMsg('ai',fmt(reply));
+  }catch(e){document.getElementById('typ-ind')?.remove();addMsg('ai','Connection error. Try again.');}
+  chatBusy=false; document.getElementById('send-btn').disabled=false;
+}
+function quickMsg(q){
+  goPage('chat',document.querySelectorAll('.ni')[1]);
+  setTimeout(()=>{document.getElementById('ci').value=q;sendChat();},150);
 }
 
-function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+// ─── TO-DO BOARD (Kanban) ───
+const COLS=[
+  {key:'todo',label:'To Do',color:'var(--v)'},
+  {key:'inprogress',label:'In Progress',color:'var(--am)'},
+  {key:'review',label:'Review',color:'var(--sky)'},
+  {key:'done',label:'Done',color:'var(--cy)'},
+];
+const PRIOS={urgent:{cls:'pp',label:'Urgent',color:'var(--pk)'},high:{cls:'pv',label:'High',color:'var(--v)'},medium:{cls:'pa',label:'Medium',color:'var(--am)'},low:{cls:'pc',label:'Low',color:'var(--cy)'}};
+const TAGS=['Academics','Health','Finance','Skills','Personal','Social'];
+
+function renderKanban(){
+  const k=document.getElementById('kanban'); if(!k) return;
+  k.innerHTML=COLS.map(col=>{
+    const items=S.todos.filter(t=>t.col===col.key);
+    return `<div class="todo-col">
+      <div class="todo-col-hd">
+        <div class="todo-col-dot" style="background:${col.color}"></div>
+        <div class="todo-col-t">${col.label}</div>
+        <div class="todo-col-count">${items.length}</div>
+      </div>
+      ${items.map(t=>renderTodoCard(t)).join('')}
+      <button style="width:100%;padding:8px;border-radius:8px;border:1px dashed var(--border2);background:transparent;color:var(--text3);cursor:pointer;font-size:11.5px;font-family:'Outfit',sans-serif;transition:all .15s;margin-top:4px" onmouseover="this.style.borderColor='rgba(124,92,252,.4)';this.style.color='var(--v)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text3)'" onclick="openAddTodoModal('${col.key}')">+ Add to ${col.label}</button>
+    </div>`;
+  }).join('');
+  // update badge
+  const pending=S.todos.filter(t=>t.col!=='done').length;
+  const badge=document.getElementById('todo-badge');
+  if(badge) badge.textContent=pending;
+  // summary
+  const sum=document.getElementById('todo-summary');
+  if(sum) sum.textContent=`${pending} active · ${S.todos.filter(t=>t.col==='done').length} completed · ${S.todos.filter(t=>t.prio==='urgent').length} urgent`;
+  renderDashTasksPreview();
 }
 
-function addMsg(role, html) {
-  const box = document.getElementById('chat-msgs');
-  const d = document.createElement('div');
-  d.className = 'msg-row' + (role === 'user' ? ' user' : '');
-  d.innerHTML = `<div class="msg-avatar ${role==='user'?'av-u':'av-j'}">${role==='user'?'A':'J'}</div><div class="msg-bubble ${role==='user'?'bubble-u':'bubble-j'}">${html}</div>`;
-  box.appendChild(d);
-  box.scrollTop = box.scrollHeight;
+function renderTodoCard(t){
+  const p=PRIOS[t.prio]||PRIOS.medium;
+  return `<div class="todo-card ${t.col==='done'?'todo-done':''}">
+    <button class="todo-card-del" onclick="deleteTodo(${t.id})">✕</button>
+    <button class="todo-card-check" onclick="moveTodo(${t.id},'${t.col==='done'?'todo':'done'}')" title="${t.col==='done'?'Reopen':'Mark done'}">${t.col==='done'?'↩':'✓'}</button>
+    <div class="todo-card-prio" style="background:${p.color}22;color:${p.color}">${p.label}</div>
+    <div class="todo-card-title">${t.title}</div>
+    ${t.desc?`<div class="todo-card-meta">${t.desc}</div>`:''}
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+      <span class="task-tag tt-v" style="font-size:9px;cursor:default">${t.tag||'Task'}</span>
+      <div style="display:flex;gap:5px">
+        ${COLS.filter(c=>c.key!==t.col).map(c=>`<button onclick="moveTodo(${t.id},'${c.key}')" style="font-size:9px;padding:2px 7px;border-radius:12px;border:1px solid var(--border2);background:transparent;color:var(--text3);cursor:pointer;transition:all .15s;font-family:'Outfit',sans-serif" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text3)'">→${c.label.split(' ')[0]}</button>`).join('')}
+      </div>
+    </div>
+  </div>`;
 }
 
-function showTyping() {
-  const box = document.getElementById('chat-msgs');
-  const d = document.createElement('div');
-  d.className = 'msg-row'; d.id = 'typing';
-  d.innerHTML = `<div class="msg-avatar av-j">J</div><div class="typing-bubble"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
-  box.appendChild(d); box.scrollTop = box.scrollHeight;
+function moveTodo(id,newCol){
+  const t=S.todos.find(t=>t.id===id); if(!t) return;
+  const old=t.col; t.col=newCol; t.done=newCol==='done';
+  renderKanban();
+  showToast('📋',`Moved to ${COLS.find(c=>c.key===newCol)?.label||newCol}`,'');
+}
+function deleteTodo(id){
+  const t=S.todos.find(t=>t.id===id);
+  S.todos=S.todos.filter(t=>t.id!==id);
+  renderKanban();
+  showToast('🗑️','Task deleted',t?.title?.slice(0,30)||'');
 }
 
-function fmt(t) {
-  return t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>').replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+function openAddTodoModal(defaultCol='todo'){
+  const colOpts=COLS.map(c=>`<option value="${c.key}" ${c.key===defaultCol?'selected':''}>${c.label}</option>`).join('');
+  const tagOpts=TAGS.map(t=>`<option>${t}</option>`).join('');
+  const prioOpts=Object.entries(PRIOS).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('');
+  const ov=mkOv(`<div class="modal-t">+ New Task</div>
+    <div class="fg"><label class="fl">Task title</label><input class="fi2" id="td-title" placeholder="What needs to be done?"></div>
+    <div class="fg"><label class="fl">Description (optional)</label><input class="fi2" id="td-desc" placeholder="Add details…"></div>
+    <div class="frow">
+      <div class="fg"><label class="fl">Priority</label><select class="fsel" id="td-prio">${prioOpts}</select></div>
+      <div class="fg"><label class="fl">Column</label><select class="fsel" id="td-col">${colOpts}</select></div>
+    </div>
+    <div class="fg"><label class="fl">Tag</label><select class="fsel" id="td-tag">${tagOpts}</select></div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-p" style="flex:1" onclick="saveTodo()">Add task</button>
+      <button class="btn btn-s" onclick="closeOv()">Cancel</button>
+    </div>`);
+  document.body.appendChild(ov);
+  setTimeout(()=>document.getElementById('td-title')?.focus(),100);
+}
+function saveTodo(){
+  const title=document.getElementById('td-title')?.value.trim(); if(!title){showToast('⚠️','Title required','');return;}
+  S.todos.push({id:S.nextTodoId++,title,desc:document.getElementById('td-desc')?.value.trim()||'',prio:document.getElementById('td-prio')?.value||'medium',col:document.getElementById('td-col')?.value||'todo',tag:document.getElementById('td-tag')?.value||'Task',done:false});
+  renderKanban(); closeOv(); showToast('✅','Task added',title.slice(0,30));
 }
 
-async function sendChat() {
-  if (busy) return;
-  const inp = document.getElementById('chat-input');
-  const text = inp.value.trim(); if (!text) return;
-  inp.value = ''; inp.style.height = 'auto';
-  document.getElementById('send-btn').disabled = true; busy = true;
-  addMsg('user', text); history.push({role:'user',content:text}); showTyping();
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYSTEM,messages:history})});
-    const data = await res.json();
-    const reply = data.content?.map(b=>b.text||'').join('') || 'Sorry, try again.';
-    history.push({role:'assistant',content:reply});
-    document.getElementById('typing')?.remove(); addMsg('ai', fmt(reply));
-  } catch(e) { document.getElementById('typing')?.remove(); addMsg('ai','Connection error. Please try again.'); }
-  busy = false; document.getElementById('send-btn').disabled = false;
+function quickAddTask(){
+  const inp=document.getElementById('quick-task-inp'); if(!inp) return;
+  const text=inp.value.trim(); if(!text) return;
+  S.todos.push({id:S.nextTodoId++,title:text,desc:'',prio:'medium',col:'todo',tag:'Task',done:false});
+  inp.value=''; renderKanban(); showToast('✅','Task added',text.slice(0,30));
 }
 
-function quickMsg(q) {
-  document.getElementById('chat-input').value = q; sendChat();
+function renderDashTasksPreview(){
+  const c=document.getElementById('dash-tasks-preview'); if(!c) return;
+  const active=S.todos.filter(t=>t.col!=='done').slice(0,4);
+  if(!active.length){c.innerHTML=`<div style="color:var(--text3);font-size:12px;padding:8px 0">All caught up! 🎉</div>`;return;}
+  const p=PRIOS;
+  c.innerHTML=active.map(t=>`
+    <div class="task-item">
+      <div class="task-check ${t.done?'done':''}" onclick="moveTodo(${t.id},'done');renderDashTasksPreview()">${t.done?'✓':''}</div>
+      <div class="task-text">${t.title}</div>
+      <span class="task-tag" style="background:${(p[t.prio]||p.medium).color}22;color:${(p[t.prio]||p.medium).color};font-size:9.5px">${(p[t.prio]||p.medium).label}</span>
+    </div>`).join('');
 }
 
-// Sleep calculator
-function calcBedtime() {
-  const wake = document.getElementById('wake-time').value;
-  const [wh, wm] = wake.split(':').map(Number);
-  const wakeMinutes = wh * 60 + wm;
-  const opts = [5,6].map(cycles => {
-    let mins = wakeMinutes - (cycles * 90) - 15;
-    if (mins < 0) mins += 1440;
-    const h = Math.floor(mins / 60) % 24;
-    const m = mins % 60;
-    const label = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
-    const ampm = h < 12 ? 'AM' : 'PM';
-    const h12 = h % 12 || 12;
-    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)"><span style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:${cycles===6?'var(--teal)':'var(--purple)'}">${h12}:${String(m).padStart(2,'0')} ${ampm}</span><span style="font-size:11px;color:var(--text3)">${cycles} cycles · ${cycles*1.5}h sleep</span></div>`;
+// ─── SLEEP ───
+function renderSleepBars(){
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const w=document.getElementById('sleep-week-bars'); if(!w) return;
+  w.innerHTML=`<div style="display:flex;flex-direction:column;gap:8px">`+days.map((d,i)=>{
+    const pct=(S.sleep.week[i]/12)*100;
+    const col=S.sleep.week[i]>=7?'var(--cy)':S.sleep.week[i]>=6?'var(--am)':'var(--pk)';
+    return `<div class="sleep-edit-row"><div class="se-day">${d}</div><div class="se-bar-wrap" onclick="inlineSleepEdit(${i},this,${S.sleep.week[i]})"><div class="se-bar-fill" style="width:${pct}%;background:${col}" id="sbar-${i}"></div></div><div class="se-hrs" id="shrs-${i}">${S.sleep.week[i]}h</div></div>`;
+  }).join('')+'</div>';
+  // stats
+  const avg=(S.sleep.week.reduce((a,b)=>a+b,0)/7).toFixed(1);
+  const best=Math.max(...S.sleep.week);
+  const debt=(parseFloat(avg)-8).toFixed(1);
+  document.getElementById('sl-avg').textContent=avg+'h';
+  document.getElementById('sl-score').textContent=S.sleep.score+'%';
+  document.getElementById('sl-best').textContent=best+'h';
+  document.getElementById('sl-debt').textContent=(debt>0?'+':'')+debt+'h';
+  document.getElementById('ring-avg2').textContent=avg;
+  document.getElementById('ring-score2').textContent=S.sleep.score+'%';
+  document.getElementById('ring-debt').textContent=(debt>0?'+':'')+debt+'h';
+  document.getElementById('dash-ring-avg').textContent=avg;
+  document.getElementById('dash-ring-score').textContent=S.sleep.score+'%';
+  // arc
+  const arc=document.getElementById('sleep-ring-arc');
+  if(arc){const pct=(parseFloat(avg)/10);arc.style.strokeDashoffset=289-(289*pct*0.82);}
+}
+
+function inlineSleepEdit(i,barWrap,current){
+  if(document.getElementById('se-edit-inp-'+i)) return;
+  const hrsEl=document.getElementById('shrs-'+i);
+  const inp=document.createElement('input');
+  inp.type='number'; inp.step='0.5'; inp.min='0'; inp.max='12'; inp.value=current;
+  inp.className='se-inp'; inp.id='se-edit-inp-'+i;
+  inp.onchange=()=>{
+    const v=Math.min(12,Math.max(0,parseFloat(inp.value)||0));
+    S.sleep.week[i]=v; inp.remove();
+    renderSleepBars(); renderDashStats();
+    showToast('🌙',`${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][i]} sleep updated`,v+'h');
+  };
+  inp.onblur=()=>{inp.onchange();};
+  if(hrsEl){hrsEl.parentNode.insertBefore(inp,hrsEl);hrsEl.style.display='none';}
+  setTimeout(()=>inp.focus(),10);
+}
+
+function openEditSleepModal(){
+  const ov=mkOv(`<div class="modal-t">✎ Edit Sleep Data</div>
+    <div class="frow">
+      <div class="fg"><label class="fl">Sleep score %</label><input class="fi2" id="es-score" type="number" min="0" max="100" value="${S.sleep.score}"></div>
+      <div class="fg"><label class="fl">Streak (days)</label><input class="fi2" id="es-streak" type="number" min="0" value="${S.streak}"></div>
+    </div>
+    <div class="fg"><label class="fl">Weekly sleep hours — click bar on sleep page to edit individually</label>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:6px">
+        ${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map((d,i)=>`<div><div style="font-size:10px;color:var(--text3);text-align:center;margin-bottom:5px">${d}</div><input class="fi2" id="esh-${i}" type="number" step="0.5" min="0" max="12" value="${S.sleep.week[i]}" style="padding:6px;text-align:center;font-size:12px"></div>`).join('')}
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-p" style="flex:1" onclick="saveSleepEdit()">Save</button>
+      <button class="btn btn-s" onclick="closeOv()">Cancel</button>
+    </div>`);
+  document.body.appendChild(ov);
+}
+function saveSleepEdit(){
+  S.sleep.score=Math.min(100,Math.max(0,parseInt(document.getElementById('es-score').value)||S.sleep.score));
+  S.streak=Math.max(0,parseInt(document.getElementById('es-streak').value)||S.streak);
+  S.sleep.week=S.sleep.week.map((_,i)=>parseFloat(document.getElementById(`esh-${i}`)?.value)||S.sleep.week[i]);
+  S.sleep.avg=parseFloat((S.sleep.week.reduce((a,b)=>a+b,0)/7).toFixed(1));
+  renderSleepBars(); renderDashStats(); closeOv(); showToast('🌙','Sleep data updated','');
+}
+
+// ─── ALARM ───
+const DAY_ABBR=['Su','Mo','Tu','We','Th','Fr','Sa'];
+function renderAlarms(){
+  const c=document.getElementById('alarm-list'); if(!c) return;
+  if(!S.alarms.length){c.innerHTML=`<div style="color:var(--text3);font-size:12px;padding:12px 0;text-align:center">No alarms set. Add one! ⏰</div>`;return;}
+  c.innerHTML=S.alarms.map(a=>`
+    <div class="alarm-card ${a.on?'active-alarm':''}">
+      <div style="flex:1">
+        <div class="alarm-time" style="color:${a.on?'var(--text)':'var(--text3)'}">${fmt12(a.time)}</div>
+        <div class="alarm-label">${a.label}</div>
+        <div class="alarm-days">
+          ${[0,1,2,3,4,5,6].map(d=>`<div class="ad ${a.days.includes(d)?'on':''}" onclick="toggleAlarmDay(${a.id},${d})">${DAY_ABBR[d]}</div>`).join('')}
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+        <div class="alarm-toggle ${a.on?'on':''}" onclick="toggleAlarm(${a.id})" title="${a.on?'Disable':'Enable'}"></div>
+        <button class="alarm-del" onclick="deleteAlarm(${a.id})">✕</button>
+        <button style="border:none;background:rgba(56,192,255,.1);color:var(--sky);width:28px;height:28px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;font-family:'Outfit',sans-serif;transition:all .15s" onclick="openEditAlarmModal(${a.id})">✎</button>
+      </div>
+    </div>`).join('');
+}
+function fmt12(t){const[h,m]=t.split(':').map(Number);const ap=h<12?'AM':'PM';const h12=h%12||12;return `${h12}:${String(m).padStart(2,'0')} ${ap}`;}
+function toggleAlarm(id){const a=S.alarms.find(a=>a.id===id);if(!a)return;a.on=!a.on;renderAlarms();showToast(a.on?'⏰':'🔕',`Alarm ${a.on?'enabled':'disabled'}`,fmt12(a.time));}
+function toggleAlarmDay(id,day){const a=S.alarms.find(a=>a.id===id);if(!a)return;a.days.includes(day)?a.days=a.days.filter(d=>d!==day):a.days.push(day);a.days.sort();renderAlarms();}
+function deleteAlarm(id){const a=S.alarms.find(a=>a.id===id);S.alarms=S.alarms.filter(a=>a.id!==id);renderAlarms();showToast('🗑️','Alarm deleted',fmt12(a?.time||''));}
+
+let alarmNextId=10;
+function openAddAlarmModal(){
+  const ov=mkOv(`<div class="modal-t">+ New Alarm</div>
+    <div class="fg"><label class="fl">Time</label><input class="fi2" type="time" id="na-time" value="07:00" style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700"></div>
+    <div class="fg"><label class="fl">Label</label><input class="fi2" id="na-label" placeholder="e.g. Morning wake-up" value="Alarm"></div>
+    <div class="fg"><label class="fl">Repeat days</label>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        ${DAY_ABBR.map((d,i)=>`<div class="ad on" id="na-day-${i}" onclick="this.classList.toggle('on')" style="width:30px;height:30px;font-size:10.5px">${d}</div>`).join('')}
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-p" style="flex:1" onclick="saveAlarm()">Set alarm</button>
+      <button class="btn btn-s" onclick="closeOv()">Cancel</button>
+    </div>`);
+  document.body.appendChild(ov);
+}
+function saveAlarm(){
+  const time=document.getElementById('na-time')?.value||'07:00';
+  const label=document.getElementById('na-label')?.value||'Alarm';
+  const days=[0,1,2,3,4,5,6].filter(i=>document.getElementById(`na-day-${i}`)?.classList.contains('on'));
+  S.alarms.push({id:alarmNextId++,time,label,days,on:true});
+  renderAlarms(); closeOv(); showToast('⏰','Alarm set',fmt12(time)+' — '+label);
+}
+function openEditAlarmModal(id){
+  const a=S.alarms.find(a=>a.id===id); if(!a) return;
+  const ov=mkOv(`<div class="modal-t">✎ Edit Alarm</div>
+    <div class="fg"><label class="fl">Time</label><input class="fi2" type="time" id="ea-time" value="${a.time}" style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700"></div>
+    <div class="fg"><label class="fl">Label</label><input class="fi2" id="ea-label" value="${a.label}"></div>
+    <div class="fg"><label class="fl">Repeat days</label>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        ${DAY_ABBR.map((d,i)=>`<div class="ad ${a.days.includes(i)?'on':''}" id="ea-day-${i}" onclick="this.classList.toggle('on')" style="width:30px;height:30px;font-size:10.5px">${d}</div>`).join('')}
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-p" style="flex:1" onclick="updateAlarm(${id})">Save</button>
+      <button class="btn btn-d" onclick="deleteAlarm(${id});closeOv()">Delete</button>
+      <button class="btn btn-s" onclick="closeOv()">Cancel</button>
+    </div>`);
+  document.body.appendChild(ov);
+}
+function updateAlarm(id){
+  const a=S.alarms.find(a=>a.id===id); if(!a) return;
+  a.time=document.getElementById('ea-time')?.value||a.time;
+  a.label=document.getElementById('ea-label')?.value||a.label;
+  a.days=[0,1,2,3,4,5,6].filter(i=>document.getElementById(`ea-day-${i}`)?.classList.contains('on'));
+  renderAlarms(); closeOv(); showToast('✏️','Alarm updated',fmt12(a.time));
+}
+
+function calcBedtime(){
+  const wake=document.getElementById('wake-time')?.value||'07:00';
+  const[wh,wm]=wake.split(':').map(Number); const wm2=wh*60+wm;
+  const opts=[5,6].map(cycles=>{
+    let mins=wm2-(cycles*90)-15; if(mins<0) mins+=1440;
+    const h=Math.floor(mins/60)%24,m=mins%60;
+    const ap=h<12?'AM':'PM',h12=h%12||12;
+    return {h12,m,ap,cycles,mins};
   });
-  document.getElementById('bedtime-options').innerHTML = opts.join('');
+  document.getElementById('bedtime-opts').innerHTML=opts.map(o=>`
+    <div class="bedtime-opt" onclick="addBedtimeAlarmAt('${String(Math.floor((o.mins)%1440/60)).padStart(2,'0')}:${String(o.mins%60).padStart(2,'0')}','Sleep (${o.cycles} cycles)')">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:${o.cycles===6?'var(--cy)':'var(--v)'}">${o.h12}:${String(o.m).padStart(2,'0')} ${o.ap}</span>
+      <span style="font-size:11px;color:var(--text3)">${o.cycles} cycles · ${o.cycles*1.5}h · tap to set</span>
+    </div>`).join('');
 }
 
-function setAlarm() { alert('Smart alarm set! JARVIS will wake you up at the lightest point in your sleep cycle. 🌙'); }
+function addBedtimeAlarm(){
+  const opts=document.querySelectorAll('.bedtime-opt');
+  if(opts[1]) opts[1].click();
+}
+function addBedtimeAlarmAt(time,label){
+  S.alarms.push({id:alarmNextId++,time,label,days:[0,1,2,3,4,5,6],on:true});
+  renderAlarms(); goPage('alarm',document.querySelectorAll('.ni')[5]);
+  showToast('⏰','Bedtime alarm set',fmt12(time));
+}
 
-// Sleep week chart
-const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-const hrs = [7.5, 8, 5.5, 7, 8, 9, 7.5];
-document.getElementById('sleep-week').innerHTML = days.map((d,i) => {
-  const pct = (hrs[i]/10)*100;
-  const col = hrs[i] >= 7 ? 'var(--teal)' : hrs[i] >= 6 ? 'var(--amber)' : 'var(--coral)';
-  return `<div style="display:flex;align-items:center;gap:10px;padding:4px 0"><div style="font-size:11px;color:var(--text3);width:28px">${d}</div><div style="flex:1;height:8px;background:var(--bg4);border-radius:4px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${col};border-radius:4px"></div></div><div style="font-size:11px;color:var(--text);width:30px;text-align:right;font-weight:500">${hrs[i]}h</div></div>`;
-}).join('');
+// ─── PAYMENTS ───
+let payNextId=20;
+function renderPayments(){
+  const pending=S.payments.filter(p=>p.status==='due');
+  const paid=S.payments.filter(p=>p.status==='paid');
+  const totalDue=pending.reduce((a,p)=>a+p.amount,0);
+  const totalPaid=paid.reduce((a,p)=>a+p.amount,0);
 
-// Room grid
-const rooms = Array.from({length:18},(_,i)=>i+1);
-const myRoom = 12, vacant = [3,7,14,16];
-document.getElementById('room-grid').innerHTML = rooms.map(r => {
-  const cls = r===myRoom?'room-you':vacant.includes(r)?'room-vacant':'room-occupied';
-  return `<div class="room-cell ${cls}"><div>${r}</div><div style="font-size:8px;margin-top:2px">${r===myRoom?'YOU':vacant.includes(r)?'FREE':'OCC'}</div></div>`;
-}).join('');
+  document.getElementById('pay-total-due').textContent='₹'+totalDue.toLocaleString('en-IN');
+  document.getElementById('pay-total-paid').textContent='₹'+totalPaid.toLocaleString('en-IN');
+  document.getElementById('pay-due-count').textContent=pending.length+' payment'+(pending.length!==1?'s':'')+' pending';
+  document.getElementById('pay-paid-count').textContent=paid.length+' payment'+(paid.length!==1?'s':'')+' cleared';
 
-// Set time
-const now = new Date();
-const days2 = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-document.getElementById('greeting-time').textContent = `${days2[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()} · ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')} ${now.getHours()<12?'AM':'PM'}`;
+  // next due date
+  if(pending.length){
+    const nxt=pending[0];
+    document.getElementById('pay-next-date').textContent=nxt.date.split(',')[0];
+    document.getElementById('pay-next-days').textContent='Due soon';
+  } else {
+    document.getElementById('pay-next-date').textContent='All clear!';
+    document.getElementById('pay-next-days').textContent='No pending fees 🎉';
+  }
 
-calcBedtime();
+  // pending list
+  const pl=document.getElementById('pay-pending-list');
+  pl.innerHTML=pending.length?pending.map(p=>payItemHTML(p,true)).join('') : `<div style="color:var(--text3);font-size:12px;padding:12px 0;text-align:center">No pending payments 🎉</div>`;
+  // history
+  const hl=document.getElementById('pay-history-list');
+  hl.innerHTML=paid.length?paid.map(p=>payItemHTML(p,false)).join('') : `<div style="color:var(--text3);font-size:12px;padding:12px 0">No payments recorded yet.</div>`;
+
+  // pay button
+  const pb=document.getElementById('pay-now-btn');
+  if(pb) pb.style.display=pending.length?'block':'none';
+
+  // badge
+  const badge=document.getElementById('pay-badge');
+  if(badge) badge.textContent=pending.length;
+
+  // dash payments
+  const dp=document.getElementById('dash-payments');
+  if(dp){
+    const show=pending.slice(0,2);
+    dp.innerHTML=show.map(p=>`<div class="pay-item" style="padding:7px 0"><div class="pay-icon" style="background:rgba(255,77,141,.1);width:28px;height:28px;border-radius:8px;font-size:13px">${p.icon}</div><div style="flex:1"><div class="pay-nm" style="font-size:12px">${p.name}</div><div class="pay-dt">${p.date}</div></div><div style="text-align:right"><div class="pay-amt pay-r" style="font-size:12px">₹${p.amount.toLocaleString('en-IN')}</div><div class="pay-badge pb-due">Due</div></div></div>`).join('')||`<div style="color:var(--cy);font-size:12px;padding:8px 0">All paid up! 🎉</div>`;
+  }
+}
+
+function payItemHTML(p,isPending){
+  const col=p.status==='due'?'pay-r':p.status==='upcoming'?'pay-a':'pay-g';
+  const badge=p.status==='due'?'pb-due':p.status==='upcoming'?'pb-soon':'pb-paid';
+  const badgeTxt=p.status==='due'?'Due':p.status==='upcoming'?'Upcoming':'Paid';
+  return `<div class="pay-item">
+    <div class="pay-icon" style="background:rgba(${isPending?'255,77,141':'0,212,170'},.1)">${p.icon}</div>
+    <div style="flex:1"><div class="pay-nm">${p.name}</div><div class="pay-dt">${p.date}</div></div>
+    <div style="text-align:right">
+      <div class="${col} pay-amt">₹${p.amount.toLocaleString('en-IN')}</div>
+      <div class="pay-badge ${badge}">${badgeTxt}</div>
+    </div>
+    <button class="pay-edit-btn" onclick="openEditPaymentModal(${p.id})">✎</button>
+    ${isPending?`<button class="pay-edit-btn" onclick="markPaid(${p.id})" style="color:var(--cy)" title="Mark as paid">✓</button>`:''}
+    <button class="pay-del" onclick="deletePayment(${p.id})">✕</button>
+  </div>`;
+}
+
+function markPaid(id){
+  const p=S.payments.find(p=>p.id===id); if(!p) return;
+  p.status='paid'; p.date='Paid '+new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+  renderPayments(); showToast('✅','Payment marked as paid','₹'+p.amount.toLocaleString('en-IN'));
+}
+function deletePayment(id){
+  const p=S.payments.find(p=>p.id===id);
+  S.payments=S.payments.filter(p=>p.id!==id);
+  renderPayments(); showToast('🗑️','Payment deleted',p?.name||'');
+}
+function openAddPaymentModal(){
+  const ov=mkOv(`<div class="modal-t">+ Add Payment</div>
+    <div class="fg"><label class="fl">Payment name</label><input class="fi2" id="np-name" placeholder="e.g. Library Fee"></div>
+    <div class="frow">
+      <div class="fg"><label class="fl">Amount (₹)</label><input class="fi2" id="np-amount" type="number" min="0" placeholder="e.g. 2000"></div>
+      <div class="fg"><label class="fl">Icon (emoji)</label><input class="fi2" id="np-icon" placeholder="💳" maxlength="2" value="💳"></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label class="fl">Due date</label><input class="fi2" id="np-date" placeholder="e.g. May 15, 2025"></div>
+      <div class="fg"><label class="fl">Status</label><select class="fsel" id="np-status"><option value="due">Due</option><option value="upcoming">Upcoming</option><option value="paid">Paid</option></select></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-p" style="flex:1" onclick="savePayment()">Add payment</button>
+      <button class="btn btn-s" onclick="closeOv()">Cancel</button>
+    </div>`);
+  document.body.appendChild(ov);
+}
+function savePayment(){
+  const name=document.getElementById('np-name')?.value.trim(); if(!name){showToast('⚠️','Name required','');return;}
+  const amount=parseInt(document.getElementById('np-amount')?.value)||0;
+  const icon=document.getElementById('np-icon')?.value||'💳';
+  const date=document.getElementById('np-date')?.value||'TBD';
+  const status=document.getElementById('np-status')?.value||'due';
+  S.payments.unshift({id:payNextId++,name,amount,icon,date,status});
+  renderPayments(); closeOv(); showToast('💳','Payment added',name);
+}
+function openEditPaymentModal(id){
+  const p=S.payments.find(p=>p.id===id); if(!p) return;
+  const ov=mkOv(`<div class="modal-t">✎ Edit Payment</div>
+    <div class="fg"><label class="fl">Name</label><input class="fi2" id="ep-name" value="${p.name}"></div>
+    <div class="frow">
+      <div class="fg"><label class="fl">Amount (₹)</label><input class="fi2" id="ep-amount" type="number" value="${p.amount}"></div>
+      <div class="fg"><label class="fl">Icon</label><input class="fi2" id="ep-icon" value="${p.icon}" maxlength="2"></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label class="fl">Date</label><input class="fi2" id="ep-date" value="${p.date}"></div>
+      <div class="fg"><label class="fl">Status</label><select class="fsel" id="ep-status"><option value="due" ${p.status==='due'?'selected':''}>Due</option><option value="upcoming" ${p.status==='upcoming'?'selected':''}>Upcoming</option><option value="paid" ${p.status==='paid'?'selected':''}>Paid</option></select></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-p" style="flex:1" onclick="updatePayment(${id})">Save</button>
+      <button class="btn btn-d" onclick="deletePayment(${id});closeOv()">Delete</button>
+      <button class="btn btn-s" onclick="closeOv()">Cancel</button>
+    </div>`);
+  document.body.appendChild(ov);
+}
+function updatePayment(id){
+  const p=S.payments.find(p=>p.id===id); if(!p) return;
+  p.name=document.getElementById('ep-name')?.value||p.name;
+  p.amount=parseInt(document.getElementById('ep-amount')?.value)||p.amount;
+  p.icon=document.getElementById('ep-icon')?.value||p.icon;
+  p.date=document.getElementById('ep-date')?.value||p.date;
+  p.status=document.getElementById('ep-status')?.value||p.status;
+  renderPayments(); closeOv(); showToast('✏️','Payment updated',p.name);
+}
+
+// ─── EXAMS ───
+function renderExamCards(){
+  const c=document.getElementById('exam-cards'); if(!c) return;
+  if(!S.exams.length){c.innerHTML=`<div style="text-align:center;padding:28px;color:var(--text3);font-size:13px">No subjects yet. Click "+ Add subject" to get started! 📚</div>`;renderDashReadiness();return;}
+  c.innerHTML=S.exams.map((e,i)=>{
+    const col=EC[e.color]||EC.violet;
+    const label=e.readiness>=80?'Strong':e.readiness>=65?'On track':'Needs work';
+    const dt=new Date(); dt.setDate(dt.getDate()+e.days);
+    const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `<div class="ec" style="border-left:3px solid ${col.border}">
+      <div class="ec-cv" style="background:${col.bg}"><div class="ec-days" style="color:${col.text}">${e.days}</div><div class="ec-lbl" style="color:${col.text}">DAYS</div></div>
+      <div class="ec-info">
+        <div class="ec-name">${e.name} · ${e.type}</div>
+        <div class="ec-meta">${mo[dt.getMonth()]} ${dt.getDate()}, ${dt.getFullYear()}</div>
+        <div class="ec-epb"><div class="ec-epl ${col.fill}" style="width:${e.readiness}%"></div></div>
+        <div id="ex-tip-${i}"></div>
+      </div>
+      <div class="ec-right">
+        <div class="ec-pct" style="color:${e.readiness>=80?'var(--cy)':col.text}">${e.readiness}%</div>
+        <div style="font-size:10px;color:var(--text3);margin-bottom:5px">${label}</div>
+        <div class="ec-btns">
+          <button class="ec-btn ec-tip" id="ex-tip-btn-${i}" onclick="genExamTip(${i})">✨</button>
+          <button class="ec-btn ec-edit" onclick="openEditExamModal(${i})">✎</button>
+          <button class="ec-btn ec-del" onclick="deleteExam(${i})">✕</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  renderDashReadiness();
+}
+function renderDashReadiness(){
+  const c=document.getElementById('dash-readiness'); if(!c) return;
+  if(!S.exams.length){c.innerHTML=`<div style="color:var(--text3);font-size:12px;padding:8px 0">No subjects added yet.</div>`;return;}
+  const fillM={pink:'pp',amber:'pa',sky:'ps',teal:'pc',violet:'pv'};
+  c.innerHTML=S.exams.slice(0,4).map(e=>`<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:12px;color:var(--text)">${e.name}</span><span style="font-size:11px;color:var(--text2);font-weight:700">${e.readiness}%</span></div><div class="pb"><div class="pf ${fillM[e.color]||'pv'}" style="width:${e.readiness}%"></div></div></div>`).join('');
+}
+function deleteExam(i){const n=S.exams[i]?.name;S.exams.splice(i,1);renderExamCards();renderDashStats();loadExamBanner();showToast('🗑️','Subject removed',n);}
+function openAddExamModal(){
+  const colOpts=['pink','amber','sky','teal','violet'].map(c=>`<option value="${c}">${c[0].toUpperCase()+c.slice(1)}</option>`).join('');
+  const ov=mkOv(`<div class="modal-t">+ Add Subject</div>
+    <div class="fg"><label class="fl">Subject name</label><input class="fi2" id="ae-name" placeholder="e.g. Data Structures"></div>
+    <div class="frow">
+      <div class="fg"><label class="fl">Exam type</label><input class="fi2" id="ae-type" placeholder="Mid-semester"></div>
+      <div class="fg"><label class="fl">Days until exam</label><input class="fi2" id="ae-days" type="number" min="1" placeholder="e.g. 14"></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label class="fl">Readiness %</label><input class="fi2" id="ae-ready" type="number" min="0" max="100" placeholder="e.g. 60">
+        <input type="range" id="ae-ready-sl" min="0" max="100" value="60" style="margin-top:6px" oninput="document.getElementById('ae-ready').value=this.value">
+      </div>
+      <div class="fg"><label class="fl">Color</label><select class="fsel" id="ae-color">${colOpts}</select></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-p" style="flex:1" onclick="saveExam()">Add subject</button>
+      <button class="btn btn-s" onclick="closeOv()">Cancel</button>
+    </div>`);
+  document.body.appendChild(ov);
+  document.getElementById('ae-ready')?.addEventListener('input',function(){document.getElementById('ae-ready-sl').value=this.value;});
+}
+function saveExam(){
+  const name=document.getElementById('ae-name')?.value.trim(); if(!name){showToast('⚠️','Name required','');return;}
+  S.exams.push({name,type:document.getElementById('ae-type')?.value||'Exam',days:parseInt(document.getElementById('ae-days')?.value)||14,readiness:Math.min(100,Math.max(0,parseInt(document.getElementById('ae-ready')?.value)||50)),color:document.getElementById('ae-color')?.value||'violet'});
+  renderExamCards(); renderDashStats(); loadExamBanner(); closeOv(); showToast('📚','Subject added',name);
+}
+function openEditExamModal(i){
+  const e=S.exams[i]; if(!e) return;
+  const colOpts=['pink','amber','sky','teal','violet'].map(c=>`<option value="${c}" ${e.color===c?'selected':''}>${c[0].toUpperCase()+c.slice(1)}</option>`).join('');
+  const ov=mkOv(`<div class="modal-t">✎ Edit Subject</div>
+    <div class="fg"><label class="fl">Subject name</label><input class="fi2" id="ee-name" value="${e.name}"></div>
+    <div class="frow">
+      <div class="fg"><label class="fl">Exam type</label><input class="fi2" id="ee-type" value="${e.type}"></div>
+      <div class="fg"><label class="fl">Days until exam</label><input class="fi2" id="ee-days" type="number" value="${e.days}"></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label class="fl">Readiness %</label>
+        <input class="fi2" id="ee-ready" type="number" min="0" max="100" value="${e.readiness}">
+        <input type="range" id="ee-ready-sl" min="0" max="100" value="${e.readiness}" style="margin-top:6px" oninput="document.getElementById('ee-ready').value=this.value">
+      </div>
+      <div class="fg"><label class="fl">Color</label><select class="fsel" id="ee-color">${colOpts}</select></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-p" style="flex:1" onclick="updateExam(${i})">Save</button>
+      <button class="btn btn-d" onclick="deleteExam(${i});closeOv()">Delete</button>
+      <button class="btn btn-s" onclick="closeOv()">Cancel</button>
+    </div>`);
+  document.body.appendChild(ov);
+  document.getElementById('ee-ready')?.addEventListener('input',function(){document.getElementById('ee-ready-sl').value=this.value;});
+}
+function updateExam(i){
+  S.exams[i].name=document.getElementById('ee-name')?.value||S.exams[i].name;
+  S.exams[i].type=document.getElementById('ee-type')?.value||S.exams[i].type;
+  S.exams[i].days=parseInt(document.getElementById('ee-days')?.value)||S.exams[i].days;
+  S.exams[i].readiness=Math.min(100,Math.max(0,parseInt(document.getElementById('ee-ready')?.value)||S.exams[i].readiness));
+  S.exams[i].color=document.getElementById('ee-color')?.value||S.exams[i].color;
+  renderExamCards(); renderDashStats(); closeOv(); showToast('✏️','Subject updated',S.exams[i].name);
+}
+async function genExamTip(i){
+  const btn=document.getElementById(`ex-tip-btn-${i}`),el=document.getElementById(`ex-tip-${i}`);
+  btn.textContent='…'; btn.disabled=true;
+  el.innerHTML=`<div style="margin-top:7px;padding-top:7px;border-top:1px solid var(--border)"><div class="jld"><span></span><span></span><span></span></div></div>`;
+  try{const exam=S.exams[i];const tip=await callAI(`${S.name} has ${exam.name} in ${exam.days} days, ${exam.readiness}% ready. Give ONE specific 25-word study tip for today. No preamble.`,`JARVIS exam coach. Under 30 words. Actionable. No filler.`,80);
+    el.innerHTML=`<div style="font-size:11px;color:var(--text2);margin-top:7px;padding-top:7px;border-top:1px solid var(--border);line-height:1.6">💡 ${tip.trim()}</div>`;
+  }catch(e){el.innerHTML='';}
+  btn.textContent='✨'; btn.disabled=false;
+}
+
+// ─── SKILLS ───
+function renderSkills(){
+  const g=document.getElementById('skills-grid'); if(!g) return;
+  g.innerHTML=S.skills.map((s,i)=>`
+    <div class="skc" onclick="openSkillModal(${i})">
+      <div class="sk-hint">Ask JARVIS ✨</div>
+      <button class="sk-del" onclick="event.stopPropagation();deleteSkill(${i})">✕</button>
+      <div class="sk-top"><div class="sk-ico" style="background:${s.bg}">${s.icon}</div><div><div class="sk-nm">${s.name}</div><div class="sk-lv">${s.level}</div></div></div>
+      <div class="pb"><div class="pf ${s.fill}" style="width:0%;transition:width 1.1s ease ${i*.08}s" data-w="${s.pct}%"></div></div>
+      <div style="font-size:10px;color:var(--text3);margin-top:5px">${s.pct}% · Next: ${s.next}</div>
+    </div>`).join('');
+  setTimeout(()=>g.querySelectorAll('[data-w]').forEach(el=>{el.style.width=el.dataset.w;}),80);
+
+  const sg=document.getElementById('soft-skills-grid'); if(!sg) return;
+  sg.innerHTML=S.softSkills.map((s,i)=>`
+    <div class="skc">
+      <div class="sk-top"><div class="sk-ico" style="background:${s.bg}">${s.icon}</div><div><div class="sk-nm">${s.name}</div><div class="sk-lv">${s.level}</div></div></div>
+      <div class="pb"><div class="pf ${s.fill}" style="width:${s.pct}%"></div></div>
+    </div>`).join('');
+}
+function deleteSkill(i){const n=S.skills[i]?.name;S.skills.splice(i,1);renderSkills();showToast('🗑️','Skill removed',n);}
+async function openSkillModal(i){
+  const s=S.skills[i];
+  const ov=mkOv(`<div class="modal-t">${s.icon} ${s.name}</div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+      <div style="flex:1"><div class="pb" style="height:7px"><div class="pf ${s.fill}" style="width:${s.pct}%;height:100%;border-radius:3px"></div></div></div>
+      <div style="font-weight:800;font-size:16px;font-family:'JetBrains Mono',monospace">${s.pct}%</div>
+    </div>
+    <div style="font-size:10px;font-weight:800;color:var(--v);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">JARVIS Coaching</div>
+    <div id="skill-ai-txt" style="font-size:13px;color:var(--text);line-height:1.75"><div class="jld"><span></span><span></span><span></span></div></div>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="btn btn-p" style="flex:1" onclick="closeOv();quickMsg('Create a 2-week plan for ${s.name} to reach 80% proficiency')">📋 Full plan</button>
+      <button class="btn btn-s" onclick="closeOv()">Close</button>
+    </div>`);
+  document.body.appendChild(ov);
+  try{const m=await callAI(`${S.name} is ${s.pct}% in ${s.name} (${s.level}). Next: ${s.next}. Give 3 bullets: 1) this week's focus, 2) free resource, 3) job/placement value. Under 70 words.`,`JARVIS skills coach. Use "•" bullets. Direct, specific. No intro.`,200);
+    const el=document.getElementById('skill-ai-txt');if(el)el.innerHTML=fmt(m.replace(/^•/gm,'-'));
+  }catch(e){const el=document.getElementById('skill-ai-txt');if(el)el.textContent=`Focus on ${s.next} this week. Consistency beats cramming.`;}
+}
+function openAddSkillModal(){
+  const fillOpts=[['pv','Violet'],['pc','Teal'],['pp','Pink'],['pa','Amber'],['ps','Sky']].map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
+  const ov=mkOv(`<div class="modal-t">+ Add Skill</div>
+    <div class="frow">
+      <div class="fg"><label class="fl">Skill name</label><input class="fi2" id="as-nm" placeholder="e.g. Flutter"></div>
+      <div class="fg"><label class="fl">Icon (emoji)</label><input class="fi2" id="as-ic" placeholder="📱" maxlength="2" value="⚡"></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label class="fl">Level</label><select class="fsel" id="as-lv"><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div>
+      <div class="fg"><label class="fl">Color</label><select class="fsel" id="as-cl">${fillOpts}</select></div>
+    </div>
+    <div class="fg"><label class="fl">Proficiency % — <span id="as-pct-disp">30%</span></label>
+      <input type="range" id="as-pct" min="0" max="100" value="30" oninput="document.getElementById('as-pct-disp').textContent=this.value+'%'">
+    </div>
+    <div class="fg"><label class="fl">Next milestone</label><input class="fi2" id="as-nx" placeholder="e.g. State management"></div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-p" style="flex:1" onclick="saveSkill()">Add skill</button>
+      <button class="btn btn-s" onclick="closeOv()">Cancel</button>
+    </div>`);
+  document.body.appendChild(ov);
+}
+function saveSkill(){
+  const name=document.getElementById('as-nm')?.value.trim(); if(!name){showToast('⚠️','Name required','');return;}
+  const fill=document.getElementById('as-cl')?.value||'pv';
+  const bgs={pv:'rgba(124,92,252,.12)',pc:'rgba(0,212,170,.12)',pp:'rgba(255,77,141,.12)',pa:'rgba(255,181,71,.12)',ps:'rgba(56,192,255,.12)'};
+  S.skills.push({name,icon:document.getElementById('as-ic')?.value||'⚡',level:document.getElementById('as-lv')?.value||'Beginner',pct:parseInt(document.getElementById('as-pct')?.value)||30,next:document.getElementById('as-nx')?.value||'Practice daily',fill,bg:bgs[fill]||bgs.pv});
+  renderSkills(); closeOv(); showToast('💡','Skill added',name);
+}
+
+// ─── PROFILE ───
+function openProfileModal(){
+  const ov=mkOv(`<div class="modal-t">✎ Edit Profile</div>
+    <div class="frow">
+      <div class="fg"><label class="fl">First name</label><input class="fi2" id="pf-fn" value="${S.name}"></div>
+      <div class="fg"><label class="fl">Last name</label><input class="fi2" id="pf-ln" value="${S.lastName}"></div>
+    </div>
+    <div class="fg"><label class="fl">College</label><input class="fi2" id="pf-co" value="${S.college}"></div>
+    <div class="frow">
+      <div class="fg"><label class="fl">Year</label><select class="fsel" id="pf-yr">${['1st','2nd','3rd','4th'].map(y=>`<option value="${y}" ${S.year===y?'selected':''}>${y} Year</option>`).join('')}</select></div>
+      <div class="fg"><label class="fl">Branch</label><input class="fi2" id="pf-br" value="${S.branch}"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-p" style="flex:1" onclick="saveProfile()">Save changes</button>
+      <button class="btn btn-s" onclick="closeOv()">Cancel</button>
+    </div>`);
+  document.body.appendChild(ov);
+}
+function saveProfile(){
+  S.name=document.getElementById('pf-fn')?.value||S.name;
+  S.lastName=document.getElementById('pf-ln')?.value||S.lastName;
+  S.college=document.getElementById('pf-co')?.value||S.college;
+  S.year=document.getElementById('pf-yr')?.value||S.year;
+  S.branch=document.getElementById('pf-br')?.value||S.branch;
+  updateProfileUI(); closeOv(); showToast('👤','Profile updated',''); loadDashBanner();
+}
+function updateProfileUI(){
+  const ini=(S.name[0]||'')+(S.lastName[0]||'');
+  document.getElementById('sb-av').textContent=ini;
+  document.getElementById('sb-nm').textContent=`${S.name} ${S.lastName}`;
+  document.getElementById('sb-cl').textContent=`${S.college} · ${S.branch} ${S.year} yr`;
+  document.getElementById('g-name').textContent=S.name+'.';
+  document.getElementById('chat-hi-name').textContent=S.name;
+  renderDashStats();
+}
+
+// ─── SETTINGS ───
+function openSettingsModal(){
+  const ov=mkOv(`<div class="modal-t">⚙️ Settings</div>
+    <div class="frow">
+      <div class="fg"><label class="fl">Sleep score %</label><input class="fi2" id="st-sc" type="number" min="0" max="100" value="${S.sleep.score}"></div>
+      <div class="fg"><label class="fl">Habit streak (days)</label><input class="fi2" id="st-st" type="number" min="0" value="${S.streak}"></div>
+    </div>
+    <div class="fg"><label class="fl">Weekly sleep (hrs) — or click bars on Sleep page to edit inline</label>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:6px">
+        ${['Mo','Tu','We','Th','Fr','Sa','Su'].map((d,i)=>`<div><div style="font-size:10px;color:var(--text3);text-align:center;margin-bottom:4px">${d}</div><input class="fi2" id="sg-${i}" type="number" step="0.5" min="0" max="12" value="${S.sleep.week[i]}" style="padding:5px;text-align:center;font-size:12px"></div>`).join('')}
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-p" style="flex:1" onclick="saveSettings()">Save</button>
+      <button class="btn btn-s" onclick="closeOv()">Cancel</button>
+    </div>`);
+  document.body.appendChild(ov);
+}
+function saveSettings(){
+  S.sleep.score=Math.min(100,Math.max(0,parseInt(document.getElementById('st-sc')?.value)||S.sleep.score));
+  S.streak=Math.max(0,parseInt(document.getElementById('st-st')?.value)||S.streak);
+  S.sleep.week=S.sleep.week.map((_,i)=>parseFloat(document.getElementById(`sg-${i}`)?.value)||S.sleep.week[i]);
+  S.sleep.avg=parseFloat((S.sleep.week.reduce((a,b)=>a+b,0)/7).toFixed(1));
+  renderSleepBars(); renderDashStats(); closeOv(); showToast('⚙️','Settings saved','');
+}
+
+// ─── HOSTEL ───
+function renderRoomGrid(){
+  const rooms=Array.from({length:18},(_,i)=>i+1),myRoom=12,vacant=[3,7,14,16];
+  document.getElementById('room-grid').innerHTML=rooms.map(r=>`<div class="room-cell ${r===myRoom?'r-you':vacant.includes(r)?'r-free':'r-occ'}" title="${r===myRoom?'Your room':vacant.includes(r)?'Vacant':'Occupied'}"><div>${r}</div><div style="font-size:8px;margin-top:1px">${r===myRoom?'YOU':vacant.includes(r)?'FREE':'OCC'}</div></div>`).join('');
+}
+
+// ─── DASHBOARD STATS ───
+function renderDashStats(){
+  const avg=(S.sleep.week.reduce((a,b)=>a+b,0)/7).toFixed(1);
+  animC(document.getElementById('ds-sleep'),parseFloat(avg),'','h');
+  animC(document.getElementById('ds-streak'),S.streak,'','d');
+  const due=S.payments.filter(p=>p.status==='due').reduce((a,p)=>a+p.amount,0);
+  animC(document.getElementById('ds-fees'),Math.round(due/1000),'₹','k');
+  animC(document.getElementById('ds-exams'),S.exams.length,'','');
+  const w=S.exams.length?[...S.exams].sort((a,b)=>a.readiness-b.readiness)[0]:null;
+  const esub=document.getElementById('ds-exams-sub'); if(esub&&w) esub.textContent=`Weakest: ${w.name.split(' ')[0]}`;
+  const ssub=document.getElementById('ds-streak-sub'); if(ssub) ssub.textContent=`Best: ${S.streak+7}d`;
+  const fcsub=document.getElementById('ds-fees-sub'); if(fcsub) fcsub.textContent=S.payments.filter(p=>p.status==='due').length+' pending';
+  const gsub=document.getElementById('g-sub'); if(gsub) gsub.textContent=`${S.todos.filter(t=>t.col!=='done').length} tasks active · ${S.exams.length} exams ahead · Sleep score: ${S.sleep.score}%`;
+  document.getElementById('dash-ring-avg').textContent=avg;
+  document.getElementById('dash-ring-score').textContent=S.sleep.score+'%';
+}
+function animC(el,target,pre,suf,dur=800){
+  if(!el)return;
+  const st=performance.now(),isF=target%1!==0;
+  const step=now=>{const p=Math.min((now-st)/dur,1),e=1-Math.pow(1-p,3),v=isF?(e*target).toFixed(1):Math.round(e*target);el.textContent=pre+v+suf;if(p<1)requestAnimationFrame(step);};
+  requestAnimationFrame(step);
+}
+
+// ─── AI BANNERS ───
+async function loadDashBanner(){
+  const el=document.getElementById('dash-jarvis');if(!el)return;
+  el.innerHTML='<div class="jld"><span></span><span></span><span></span></div>';
+  try{const h=new Date().getHours(),g=h<12?'morning':h<17?'afternoon':'evening';
+    const w=S.exams.length?[...S.exams].sort((a,b)=>a.readiness-b.readiness)[0]:null;
+    const msg=await callAI(`It's ${g}. Give ${S.name} a warm 2-sentence greeting. Mention: ${w?`${w.name} in ${w.days} days at ${w.readiness}% readiness`:'upcoming exams'}. Motivating and specific. No preamble.`,`JARVIS for ${S.name}, ${S.year} yr ${S.branch} at ${S.college}. Under 55 words. Friendly tone.`,120);
+    el.textContent=msg;
+  }catch(e){el.textContent=`Good to see you, ${S.name}! Focus on your weakest subject first — small consistent sessions beat cramming every time.`;}
+}
+async function loadSleepBanner(){
+  const el=document.getElementById('sleep-jarvis');if(!el)return;
+  el.innerHTML='<div class="jld"><span></span><span></span><span></span></div>';
+  try{const msg=await callAI(`Sleep data: ${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map((d,i)=>d+' '+S.sleep.week[i]+'h').join(', ')}. Avg ${S.sleep.avg}h, score ${S.sleep.score}%. Give 2-sentence insight + tonight's bedtime recommendation.`,`JARVIS sleep AI. Under 60 words. Specific and warm.`,120);
+    el.textContent=msg;
+  }catch(e){el.textContent=`Your ${S.sleep.avg}h average is ${S.sleep.avg>=7?'solid':'below target'}! ${S.sleep.avg<7?'Try to sleep 30 minutes earlier this week.':'Keep it up and aim for consistent timing.'}`;}
+}
+async function loadExamBanner(){
+  const el=document.getElementById('exam-jarvis');if(!el)return;
+  el.innerHTML='<div class="jld"><span></span><span></span><span></span></div>';
+  if(!S.exams.length){el.textContent='Add your subjects to get personalized exam coaching from JARVIS! 📚';return;}
+  try{const msg=await callAI(`${S.name} has: ${S.exams.map(e=>`${e.name} in ${e.days} days (${e.readiness}% ready)`).join(', ')}. Give a 2-sentence exam strategy. What to study TODAY. Be direct.`,`JARVIS exam AI. Under 60 words. Tough-love coach.`,120);
+    el.textContent=msg;
+  }catch(e){const w=S.exams.length?[...S.exams].sort((a,b)=>a.readiness-b.readiness)[0]:null;el.textContent=w?`Focus on ${w.name} today — ${w.readiness}% readiness with ${w.days} days to go needs consistent effort right now.`:'Add subjects for coaching.';}
+}
+
+// ─── OVERLAY / MODAL ───
+function mkOv(html){
+  const ov=document.createElement('div'); ov.className='overlay'; ov.id='modal-overlay';
+  ov.innerHTML=`<div class="modal"><button class="mcls" onclick="closeOv()">✕</button>${html}</div>`;
+  ov.addEventListener('click',e=>{if(e.target===ov)closeOv();});
+  return ov;
+}
+function closeOv(){document.getElementById('modal-overlay')?.remove();}
+
+// ─── TOAST ───
+let toastTmr;
+function showToast(ico,txt,sub=''){
+  document.querySelectorAll('.toast').forEach(t=>t.remove());
+  const t=document.createElement('div'); t.className='toast';
+  t.innerHTML=`<div class="t-ico">${ico}</div><div><div class="t-txt">${txt}</div>${sub?`<div class="t-sub">${sub}</div>`:''}</div>`;
+  document.body.appendChild(t);
+  clearTimeout(toastTmr);
+  toastTmr=setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),280);},3200);
+}
+
+// ─── CLOCK ───
+function updateClock(){
+  const now=new Date();
+  const d=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const m=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const h=now.getHours(),mn=String(now.getMinutes()).padStart(2,'0');
+  const el=document.getElementById('g-time'); if(el) el.textContent=`${d[now.getDay()]}, ${m[now.getMonth()]} ${now.getDate()} · ${h%12||12}:${mn} ${h<12?'AM':'PM'}`;
+}
+
+// ─── INIT ───
+window.addEventListener('DOMContentLoaded',()=>{
+  updateClock(); setInterval(updateClock,30000);
+  updateProfileUI();
+  renderKanban();
+  renderSleepBars();
+  renderAlarms();
+  renderPayments();
+  renderRoomGrid();
+  renderExamCards();
+  renderSkills();
+  calcBedtime();
+  setTimeout(renderDashStats,200);
+  loadDashBanner();
+  loadSleepBanner();
+  loadExamBanner();
+});
 </script>
 </body>
 </html>
